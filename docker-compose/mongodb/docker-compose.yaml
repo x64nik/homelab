@@ -1,0 +1,19 @@
+version: '3.8'  # Specify the version of Docker Compose
+
+services:
+  mongodb:
+    image: mongo:latest  # The MongoDB image from Docker Hub
+    container_name: mongodb  # Optional: Name of the container
+    restart: always  # Automatically restart the container if it stops
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=nik  # Set the root username
+      - MONGO_INITDB_ROOT_PASSWORD=password  # Set the root password
+    ports:
+      - "27017:27017"  # Expose the default MongoDB port
+
+    volumes:
+      - mongodb_data:/data/db  # Persist MongoDB data in a Docker volume
+
+volumes:
+  mongodb_data:
+    driver: local  # Use the local driver for volume storage

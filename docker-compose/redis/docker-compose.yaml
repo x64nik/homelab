@@ -1,0 +1,16 @@
+version: '3.8'  # Specify the version of Docker Compose
+
+services:
+  redis:
+    image: redis:latest  # The Redis image from Docker Hub
+    container_name: redis  # Optional: Name of the container
+    restart: always  # Automatically restart the container if it stops
+    ports:
+      - "6379:6379"  # Expose the default Redis port
+
+    volumes:
+      - redis_data:/data  # Persist Redis data in a Docker volume
+
+volumes:
+  redis_data:
+    driver: local  # Use the local driver for volume storage

@@ -1,0 +1,23 @@
+
+version: '3'
+services:
+  rabbitmq_prod:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq_prod
+    restart: always
+    ports:
+      - "5672:5672"   # RabbitMQ server
+      - "15672:15672" # RabbitMQ management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=nik
+      - RABBITMQ_DEFAULT_PASS=password 
+  rabbitmq_dev:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq_dev
+    restart: always
+    ports:
+      - "5673:5672"   # RabbitMQ server
+      - "15673:15672" # RabbitMQ management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=nik
+      - RABBITMQ_DEFAULT_PASS=password
