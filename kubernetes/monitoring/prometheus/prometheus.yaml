@@ -21,6 +21,7 @@ spec:
     - key: name
       operator: In
       values:
+      - nfs-nas-prometheus-servicemonitor
       - kube-state-metrics
       - node-exporter
       - kubelet
@@ -30,7 +31,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: local-path
+        storageClassName: nfs-nas
         resources:
           requests:
             storage: 20Gi

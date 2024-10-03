@@ -6,10 +6,10 @@ metadata:
 spec:
   selector:
     prometheus: prometheus-persistant
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: web
       protocol: TCP
       port: 9090
       targetPort: web
-  loadBalancerIP: 192.168.0.150
+  # loadBalancerIP: 192.168.0.150

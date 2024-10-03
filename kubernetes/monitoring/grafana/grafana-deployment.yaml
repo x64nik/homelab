@@ -37,12 +37,14 @@ spec:
         - mountPath: /var/lib/grafana
           name: grafana-storage
           readOnly: false
+      nodeSelector:
+        node-type: worker
       securityContext:
-        fsGroup: 65534
-        runAsNonRoot: true
-        runAsUser: 65534
+        fsGroup: 0
+        runAsUser: 0
+        # runAsNonRoot: true
       serviceAccountName: grafana
       volumes:
         - name: grafana-storage
           persistentVolumeClaim:
-            claimName: longhorn-grafana-pvc
+            claimName: nfs-nas-grafana-pvc

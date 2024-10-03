@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: longhorn-grafana-pvc
+  name: nfs-nas-grafana-pvc
   namespace: monitoring
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: local-path
+  storageClassName: nfs-nas
   resources:
     requests:
       storage: 10Gi

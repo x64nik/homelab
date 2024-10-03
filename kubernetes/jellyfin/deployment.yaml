@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jellyfin
+    app.kubernetes.io/instance: jellyfin
+    app.kubernetes.io/name: jellyfin
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+        app.kubernetes.io/name: jellyfin
+    spec:
+      nodeSelector:
+        node-type: "worker"
+      containers:
+      - image: jellyfin/jellyfin
+        imagePullPolicy: Always
+        name: jellyfin
+        ports:
+        - containerPort: 8096
+          name: http-tcp
+          protocol: TCP
+        - containerPort: 1900
+          name: dlna-udp
+          protocol: UDP
+        - containerPort: 7359
+          name: discovery-udp
+          protocol: UDP      
+        env:
+        - name: TZ
+          value: Asia/Kolkata
+        volumeMounts:
+        - mountPath: "/Movies"
+          readOnly: false
+          name: smb
+          subPath: Movies
+        - mountPath: "/TVShows"
+          readOnly: false
+          name: smb
+          subPath: TVShows
+      volumes:
+        - name: smb
+          persistentVolumeClaim:
+            claimName: pvc-jellyfin-smb
