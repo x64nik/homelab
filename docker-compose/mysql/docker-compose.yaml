@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_prod
+    restart: always
+    ports:
+      - "3306:3306"  # Expose MySQL only if necessary (production environments should avoid unnecessary exposure)
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mysql_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    container_name: mysql_exporter
+    environment:
+      DATA_SOURCE_NAME: "root:${MYSQL_ROOT_PASSWORD}@tcp(mysql:3306)/"
+    ports:
+      - "9104:9104"  # Expose MySQL metrics on this port
+    networks:
+      - mysql_network
+    depends_on:
+      - mysql
+    labels:
+      - "prometheus_scrape=true"
+    restart: always
+
+networks:
+  mysql_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
