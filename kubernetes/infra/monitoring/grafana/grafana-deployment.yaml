@@ -47,4 +47,4 @@ spec:
       volumes:
         - name: grafana-storage
           persistentVolumeClaim:
-            claimName: nfs-nas-grafana-pvc
+            claimName: local-path-grafana-pvc
