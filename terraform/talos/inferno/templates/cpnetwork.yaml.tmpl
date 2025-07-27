@@ -1,0 +1,13 @@
+machine:
+  network:
+    interfaces:
+      - deviceSelector:
+          busPath: "0*"
+        dhcp: false
+        addresses:
+          - ${node_ip}/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${gateway_ip}
+        vip:
+          ip: ${cpip}
