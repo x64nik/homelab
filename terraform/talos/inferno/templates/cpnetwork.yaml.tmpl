@@ -1,13 +1,11 @@
 machine:
   network:
     interfaces:
-      - deviceSelector:
-          busPath: "0*"
-        dhcp: false
+      - interface: eth0
         addresses:
-          - ${node_ip}/24
+          - ${cpip}/24
         routes:
           - network: 0.0.0.0/0
-            gateway: ${gateway_ip}
+            gateway: ${gateway}
         vip:
-          ip: ${cpip}
+          ip: ${vip}

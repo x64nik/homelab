@@ -90,7 +90,7 @@ resource "proxmox_virtual_environment_vm" "talos_cp_02" {
     datastore_id = "sas_pool"
     ip_config {
       ipv4 {
-        address = "${var.talos_cp_01_ip_addr}/24"
+        address = "${var.talos_cp_02_ip_addr}/24"
         gateway = var.default_gateway
       }
       #   ipv6 {
@@ -141,7 +141,7 @@ resource "proxmox_virtual_environment_vm" "talos_cp_03" {
     datastore_id = "sas_pool"
     ip_config {
       ipv4 {
-        address = "${var.talos_cp_01_ip_addr}/24"
+        address = "${var.talos_cp_03_ip_addr}/24"
         gateway = var.default_gateway
       }
       #   ipv6 {
@@ -245,7 +245,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker_02" {
     datastore_id = "sas_pool"
     ip_config {
       ipv4 {
-        address = "${var.talos_worker_01_ip_addr}/24"
+        address = "${var.talos_worker_02_ip_addr}/24"
         gateway = var.default_gateway
       }
       #   ipv6 {
@@ -297,7 +297,7 @@ resource "proxmox_virtual_environment_vm" "talos_worker_03" {
     datastore_id = "sas_pool"
     ip_config {
       ipv4 {
-        address = "${var.talos_worker_01_ip_addr}/24"
+        address = "${var.talos_worker_03_ip_addr}/24"
         gateway = var.default_gateway
       }
       #   ipv6 {

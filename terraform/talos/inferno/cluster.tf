@@ -34,7 +34,6 @@ data "talos_machine_configuration" "machineconfig_cp_03" {
 }
 
 # Apply Control Plane Configurations
-# Master 01
 resource "talos_machine_configuration_apply" "cp_config_apply" {
   depends_on                  = [proxmox_virtual_environment_vm.talos_cp_01]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
@@ -42,39 +41,37 @@ resource "talos_machine_configuration_apply" "cp_config_apply" {
   node                        = var.talos_cp_01_ip_addr
   config_patches = [
     templatefile("./templates/cpnetwork.yaml.tmpl", {
-      cpip       = var.cp_vip,
-      node_ip    = var.talos_cp_01_ip_addr,
-      gateway_ip = var.default_gateway
+      cpip    = var.talos_cp_01_ip_addr,
+      gateway = var.default_gateway,
+      vip     = var.cp_vip
     })
   ]
 }
 
-# Master 02
 resource "talos_machine_configuration_apply" "cp_config_apply_02" {
   depends_on                  = [proxmox_virtual_environment_vm.talos_cp_02]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
-  machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
+  machine_configuration_input = data.talos_machine_configuration.machineconfig_cp_02.machine_configuration
   node                        = var.talos_cp_02_ip_addr
   config_patches = [
     templatefile("./templates/cpnetwork.yaml.tmpl", {
-      cpip       = var.cp_vip,
-      node_ip    = var.talos_cp_02_ip_addr,
-      gateway_ip = var.default_gateway
+      cpip    = var.talos_cp_02_ip_addr,
+      gateway = var.default_gateway,
+      vip     = var.cp_vip
     })
   ]
 }
 
-# Master 03
 resource "talos_machine_configuration_apply" "cp_config_apply_03" {
   depends_on                  = [proxmox_virtual_environment_vm.talos_cp_03]
   client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
-  machine_configuration_input = data.talos_machine_configuration.machineconfig_cp.machine_configuration
+  machine_configuration_input = data.talos_machine_configuration.machineconfig_cp_03.machine_configuration
   node                        = var.talos_cp_03_ip_addr
   config_patches = [
     templatefile("./templates/cpnetwork.yaml.tmpl", {
-      cpip       = var.cp_vip,
-      node_ip    = var.talos_cp_03_ip_addr,
-      gateway_ip = var.default_gateway
+      cpip    = var.talos_cp_03_ip_addr,
+      gateway = var.default_gateway,
+      vip     = var.cp_vip
     })
   ]
 }

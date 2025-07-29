@@ -48,6 +48,11 @@ variable "talos_version" {
   default = "v1.9.5"
 }
 
+variable "talos_image_sha" {
+  type    = string
+  default = "ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515"
+}
+
 variable "kubernetes_version" {
   type    = string
   default = "1.33.0"
