@@ -1,0 +1,75 @@
+terraform {
+  required_providers {
+    proxmox = {
+      source  = "bpg/proxmox"
+      version = "0.80.0"
+    }
+  }
+}
+
+provider "proxmox" {
+  endpoint = "https://192.168.0.100:8006/"
+  insecure = true # Only needed if your Proxmox server is using a self-signed certificate
+}
+
+resource "proxmox_virtual_environment_download_file" "talos_nocloud_image" {
+  content_type = "iso"
+  datastore_id = var.datastore_id
+  node_name    = var.node_name
+  file_name               = "talos-${var.talos_version}-nocloud-amd64.img"
+  url                     = "https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/${var.talos_version}/nocloud-amd64.raw.gz"
+  decompression_algorithm = "gz"
+  overwrite               = false
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
+resource "proxmox_virtual_environment_vm" "vm" {
+  for_each = var.proxmox_vms_talos
+  vm_id = each.value.id
+  name        = each.value.name
+  description = "Managed by Terraform"
+  tags        = each.value.tags
+  node_name   = var.node_name
+  on_boot     = true
+
+  cpu {
+    cores = var.cpu_cores
+    type  = var.cpu_type
+  }
+
+  memory {
+    dedicated = var.memory
+  }
+
+  agent {
+    enabled = true
+  }
+
+  network_device {
+    bridge = var.bridge
+  }
+
+  disk {
+    datastore_id = "sas_pool"
+    file_id      = proxmox_virtual_environment_download_file.talos_nocloud_image.id
+    file_format  = "raw"
+    interface    = "virtio0"
+    size         = var.disk_size
+  }
+
+  operating_system {
+    type = "l26"
+  }
+
+  initialization {
+    datastore_id = "sas_pool"
+    ip_config {
+      ipv4 {
+        address = "${each.value.ip}/24"
+        gateway = var.gateway
+      }
+    }
+  }
+}

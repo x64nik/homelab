@@ -1,13 +1,3 @@
-variable "proxmox_vms_talos" {
-  type = map(object({
-    id     = number
-    ip     = string
-    name = string
-    controller = optional(bool)
-    tags = list(string)
-  }))
-}
-
 variable "cluster_name" {
   description = "Name of the Talos cluster"
   type        = string
@@ -26,4 +16,14 @@ variable "default_gateway" {
 variable "cp_vip" {
   description = "Control plane virtual IP for Talos cluster"
   type        = string
+}
+
+variable "proxmox_vms_talos" {
+  type = map(object({
+    id     = number
+    ip     = string
+    name = string
+    controller = optional(bool)
+    tags = list(string)
+  }))
 }
