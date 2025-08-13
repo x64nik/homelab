@@ -24,7 +24,7 @@ services:
       - TZ=Asia/Kolkata
     volumes:
       - ./sonarr-config:/config
-      - tmedia-server-data:/downloads
+      - media-server-data:/downloads
     ports:
       - 8989:8989
     restart: unless-stopped
