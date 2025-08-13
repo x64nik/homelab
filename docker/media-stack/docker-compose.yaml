@@ -1,0 +1,62 @@
+services:  
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=5080
+    volumes:
+      - ./qbittorrent-config:/config
+      - media-server-data:/downloads
+    ports:
+      - 5080:5080
+      - 6881:6881
+      - 6881:6881/udp
+    restart: "unless-stopped"
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./sonarr-config:/config
+      - tmedia-server-data:/downloads
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  prowlarr:
+    container_name: prowlarr
+    image: linuxserver/prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./prowlarr-config:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  jellyseerr:
+    image: fallenbagel/jellyseerr
+    container_name: jellyseerr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - ./jellyseerr-config:/app/config
+    ports:
+      - 5055:5055
+    restart: unless-stopped
+
+volumes:
+  media-server-data:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /mnt/media-server-data
