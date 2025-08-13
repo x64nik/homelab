@@ -63,7 +63,7 @@ services:
       - 7878:7878
     volumes:
       - ./radarr-config:/config
-      - media-server-data:/downloads
+      - media-server-data`:/downloads
     restart: "unless-stopped"
 
 volumes:
