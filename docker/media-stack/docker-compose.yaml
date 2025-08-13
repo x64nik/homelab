@@ -52,6 +52,19 @@ services:
     ports:
       - 5055:5055
     restart: unless-stopped
+  radarr:
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    ports:
+      - 7878:7878
+    volumes:
+      - ./radarr-config:/config
+      - media-server-data:/downloads
+    restart: "unless-stopped"
 
 volumes:
   media-server-data:
