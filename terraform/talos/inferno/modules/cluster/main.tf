@@ -17,6 +17,7 @@ locals {
     for key, node in var.proxmox_vms_talos : node.ip
     if node.controller != true
   ]
+  kubeconfig_parsed = yamldecode(talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw)
 }
 
 # Secrets required for Talos cluster
@@ -59,7 +60,8 @@ resource "talos_machine_configuration_apply" "controlplanes" {
       cpip    = each.value
       gateway = var.default_gateway
       vip     = var.cp_vip
-    })
+    }),
+    file("${path.module}/templates/clusterconfig.yaml.tmpl")
   ]
 }
 
@@ -69,7 +71,9 @@ resource "talos_machine_configuration_apply" "worker" {
   client_configuration        = talos_machine_secrets.secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.workers.machine_configuration
   node                        = each.value
-
+  config_patches = [
+    file("${path.module}/templates/clusterconfig.yaml.tmpl")
+  ]
 }
 
 # Bootstrap cluster using the first control plane node
@@ -83,19 +87,19 @@ resource "talos_machine_bootstrap" "bootstrap" {
 }
 
 # Cluster health check
-data "talos_cluster_health" "health" {
-  depends_on = [
-    talos_machine_bootstrap.bootstrap
-  ]
-  client_configuration = data.talos_client_configuration.client.client_configuration
-  control_plane_nodes  = local.controller_vm_ips
-  worker_nodes         = local.worker_vm_ips
-  endpoints            = data.talos_client_configuration.client.endpoints
-}
+# data "talos_cluster_health" "health" {
+#   depends_on = [
+#     talos_machine_bootstrap.bootstrap,
+#   ]
+#   client_configuration = data.talos_client_configuration.client.client_configuration
+#   control_plane_nodes  = local.controller_vm_ips
+#   worker_nodes         = local.worker_vm_ips
+#   endpoints            = data.talos_client_configuration.client.endpoints
+# }
 
 # Retrieve Kubeconfig
 resource "talos_cluster_kubeconfig" "kubeconfig" {
-  depends_on           = [talos_machine_bootstrap.bootstrap, data.talos_cluster_health.health]
+  # depends_on           = [talos_machine_bootstrap.bootstrap, data.talos_cluster_health.health]
   client_configuration = talos_machine_secrets.secrets.client_configuration
   node                 = local.controller_vm_ips[0]
 }

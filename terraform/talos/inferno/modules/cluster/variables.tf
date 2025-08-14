@@ -1,3 +1,9 @@
+variable "cluster_dependencies" {
+  description = "Cluster core dependencies without this cluster health checks may fail"
+  type        = any
+  default = []
+}
+
 variable "cluster_name" {
   description = "Name of the Talos cluster"
   type        = string
