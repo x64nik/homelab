@@ -5,7 +5,19 @@ variable "proxmox_vms_talos" {
     name = string
     controller = optional(bool)
     tags = list(string)
-  }))
+
+    node_name = optional(string, "alpha")
+    bridge = optional(string, "vmbr0")
+
+
+    # hardware
+    cpu_cores = optional(number, 2)
+    cpu_type = optional(string, "host")
+    memory = optional(number, 4096)
+    disk_size = optional(number, 20)
+
+  })
+  )
 }
 
 variable "cluster_dependencies" {
@@ -32,6 +44,12 @@ variable "default_gateway" {
 variable "cp_vip" {
   description = "Control plane virtual IP for Talos cluster"
   type        = string
+}
+
+variable "enable_mayastor" {
+  description = "Enable Mayastor storage configuration"
+  type        = bool
+  default     = false
 }
 
 variable "helm_charts" {

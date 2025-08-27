@@ -5,7 +5,23 @@ variable "proxmox_vms_talos" {
     name = string
     controller = optional(bool)
     tags = list(string)
-  }))
+
+    node_name = optional(string, "alpha")
+    bridge = optional(string, "vmbr0")
+
+
+    # hardware
+    cpu_cores = optional(number, 2)
+    cpu_type = optional(string, "host")
+    memory = optional(number, 4096)
+    disk_size = optional(number, 20)
+
+  })
+  )
+}
+
+variable "bootstrap_node_name" {
+  default = "alpha"
 }
 
 variable "gateway" {
@@ -16,24 +32,6 @@ variable "talos_version" {
   default = "v1.9.5"
 }
 
-variable "node_name" {
-    default = "alpha"
-}
-variable "cpu_cores" {
-  default = 2
-}
-variable "cpu_type" {
-  default = "host"
-}
-variable "memory" {
-  default = 4096
-}
-variable "bridge" {
-  default = "vmbr0"
-}
 variable "datastore_id" {
   default = "local"
-}
-variable "disk_size" {
-  default = 20
 }

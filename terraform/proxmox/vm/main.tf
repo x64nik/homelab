@@ -12,6 +12,17 @@ provider "proxmox" {
   insecure = true # Only needed if your Proxmox server is using a self-signed certificate
 }
 
+# Local values to determine the correct file_id based on source type
+locals {
+  vm_disk_file_ids = {
+    for k, v in var.proxmox_vms : k => (
+      v.image_source_type == "url" ? 
+        proxmox_virtual_environment_download_file.qcow2_img[k].id :
+        v.existing_file_path  # For existing files already in Proxmox (format: "local:iso/image.qcow2")
+    )
+  }
+}
+
 resource "proxmox_virtual_environment_vm" "vm" {
   for_each    = var.proxmox_vms
   vm_id       = each.value.id
@@ -19,12 +30,15 @@ resource "proxmox_virtual_environment_vm" "vm" {
   description = "Managed by Terraform"
   tags        = each.value.tags
   node_name   = var.node_name
-  on_boot     = true
-  machine = "q35"
-  bios = "ovmf"
+  on_boot     = false
+  # machine = "q35"
+  # bios = "ovmf"
 
-  efi_disk {
-    datastore_id = each.value.disk_datastore_id
+  dynamic "efi_disk" {
+    for_each = lookup(each.value, "enable_efi", false) ? [1] : []
+    content {
+      datastore_id = each.value.efi_disk
+    }
   }
 
   cpu {
@@ -46,7 +60,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
 
   disk {
     datastore_id = each.value.disk_datastore_id
-    file_id      = proxmox_virtual_environment_download_file.qcow2_img[each.key].id
+    file_id      = local.vm_disk_file_ids[each.key]
     interface    = "scsi0"
     size         = var.disk_size
   }
@@ -56,7 +70,6 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 
   initialization {
-    interface = "scsi1"
     datastore_id = each.value.disk_datastore_id
     ip_config {
       ipv4 {

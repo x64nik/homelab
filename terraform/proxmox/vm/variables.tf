@@ -10,6 +10,8 @@ variable "proxmox_vms" {
     ip             = string
 
     disk_datastore_id = string
+    enable_efi = optional(bool, false)
+    efi_disk = optional(string)
 
     gpu_passthrough = optional(bool, false)
     gpu_device      = optional(string, "hostpci0")
@@ -18,11 +20,13 @@ variable "proxmox_vms" {
     gpu_rombar      = optional(bool, true)
     gpu_x_vga       = optional(bool, false)
 
-    qcow2_img_url  = string
-    qcow2_img_name = string
-
     tags = optional(list(string), [])
 
+    # Image source configuration - simplified to only "url" or "existing"
+    image_source_type    = string           # "url" or "existing"
+    image_filename       = optional(string) # Required if image_source_type = "url"
+    image_url            = optional(string) # Required if image_source_type = "url"
+    existing_file_path   = optional(string) # Required if image_source_type = "existing" (format: "local:iso/image.qcow2")
   }))
 }
 

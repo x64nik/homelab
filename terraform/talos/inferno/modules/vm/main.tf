@@ -15,7 +15,7 @@ provider "proxmox" {
 resource "proxmox_virtual_environment_download_file" "talos_nocloud_image" {
   content_type = "iso"
   datastore_id = var.datastore_id
-  node_name    = var.node_name
+  node_name    = var.bootstrap_node_name
   file_name               = "talos-${var.talos_version}-nocloud-amd64.img"
   url                     = "https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/${var.talos_version}/nocloud-amd64.raw.gz"
   decompression_algorithm = "gz"
@@ -31,16 +31,16 @@ resource "proxmox_virtual_environment_vm" "vm" {
   name        = each.value.name
   description = "Managed by Terraform"
   tags        = each.value.tags
-  node_name   = var.node_name
+  node_name   = each.value.node_name
   on_boot     = true
 
   cpu {
-    cores = var.cpu_cores
-    type  = var.cpu_type
+    cores = each.value.cpu_cores
+    type  = each.value.cpu_type
   }
 
   memory {
-    dedicated = var.memory
+    dedicated = each.value.memory
   }
 
   agent {
@@ -48,7 +48,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   }
 
   network_device {
-    bridge = var.bridge
+    bridge = each.value.bridge
   }
 
   disk {
@@ -56,7 +56,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
     file_id      = proxmox_virtual_environment_download_file.talos_nocloud_image.id
     file_format  = "raw"
     interface    = "virtio0"
-    size         = var.disk_size
+    size         = each.value.disk_size
   }
 
   operating_system {

@@ -2,7 +2,7 @@ terraform {
   required_providers {
     helm = {
       source  = "hashicorp/helm"
-      version = "3.0.2"
+      version = "2.17.0"
     }
   }
 }
@@ -30,4 +30,5 @@ resource "helm_release" "chart" {
   max_history     = 5
   reuse_values    = true    # This is key for upgrades
   reset_values    = false   # This prevents value resets
+  upgrade_install = true
 }

@@ -24,6 +24,12 @@ variable "cp_vip" {
   type        = string
 }
 
+variable "enable_mayastor" {
+  description = "Enable Mayastor storage configuration"
+  type        = bool
+  default     = false
+}
+
 variable "proxmox_vms_talos" {
   type = map(object({
     id     = number

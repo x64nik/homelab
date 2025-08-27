@@ -55,14 +55,15 @@ resource "talos_machine_configuration_apply" "controlplanes" {
   machine_configuration_input = data.talos_machine_configuration.controlplanes.machine_configuration
   node                        = each.value
 
-  config_patches = [
-    templatefile("${path.module}/templates/cpnetwork.yaml.tmpl", {
+  config_patches = concat(
+    [templatefile("${path.module}/templates/cpnetwork.yaml.tmpl", {
       cpip    = each.value
       gateway = var.default_gateway
       vip     = var.cp_vip
-    }),
-    file("${path.module}/templates/clusterconfig.yaml.tmpl")
-  ]
+    })],
+    [file("${path.module}/templates/clusterconfig.yaml.tmpl")],
+    var.enable_mayastor ? [file("${path.module}/templates/mayastor-cp.yaml.tmpl")] : []
+  )
 }
 
 # Apply Worker Configurations
@@ -71,9 +72,10 @@ resource "talos_machine_configuration_apply" "worker" {
   client_configuration        = talos_machine_secrets.secrets.client_configuration
   machine_configuration_input = data.talos_machine_configuration.workers.machine_configuration
   node                        = each.value
-  config_patches = [
-    file("${path.module}/templates/clusterconfig.yaml.tmpl")
-  ]
+  config_patches = concat(
+    [file("${path.module}/templates/clusterconfig.yaml.tmpl")],
+    var.enable_mayastor ? [file("${path.module}/templates/mayastor-wp.yaml.tmpl")] : []
+  )
 }
 
 # Bootstrap cluster using the first control plane node

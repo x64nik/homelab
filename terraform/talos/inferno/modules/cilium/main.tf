@@ -31,7 +31,6 @@ resource "kubernetes_manifest" "cilium_lb_ip_pool" {
     }
   }
   
-  depends_on = [var.cilium_ready]
 }
 
 # CiliumL2AnnouncementPolicy

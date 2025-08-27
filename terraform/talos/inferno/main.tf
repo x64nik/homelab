@@ -1,6 +1,6 @@
 # Configure provider in root module
 provider "helm" {
-  kubernetes = {
+  kubernetes {
     host                   = "https://${var.cp_vip}:6443"
     cluster_ca_certificate = module.talos_cluster.cluster_ca_certificate
     client_certificate     = module.talos_cluster.client_certificate
@@ -29,6 +29,7 @@ module "talos_cluster" {
   cluster_name = var.cluster_name
   kubernetes_version = var.kubernetes_version
   cluster_dependencies = var.cluster_dependencies
+  enable_mayastor = var.enable_mayastor
 }
 
 module "cilium" {
@@ -48,7 +49,9 @@ module "cilium" {
 
 module "cilium_networking" {
   source = "./modules/cilium"
-  depends_on = [module.cilium]
+  depends_on = [
+    module.cilium
+  ]
 
   cluster_ca_certificate = module.talos_cluster.cluster_ca_certificate
   client_certificate     = module.talos_cluster.client_certificate

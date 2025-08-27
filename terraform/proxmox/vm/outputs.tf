@@ -7,7 +7,7 @@ output "vm_ssh_configs" {
     for vm_key, vm in proxmox_virtual_environment_vm.vm : vm_key => {
       host = vm.name
       hostname = split("/", var.proxmox_vms[vm_key].ip)[0]  # Extract IP without CIDR
-      user = vm.vm_username
+      user = var.proxmox_vms[vm_key].vm_username
       port = 22
       vm_id = vm.vm_id
     }
@@ -19,7 +19,7 @@ output "ssh_config_entries" {
   description = "Formatted SSH config entries ready to copy to ~/.ssh/config"
   value = join("\n\n", [
     for vm_key, vm in proxmox_virtual_environment_vm.vm : 
-    "Host ${vm.name}\n    HostName ${split("/", var.proxmox_vms[vm_key].ip)[0]}\n    User ${vm.vm_username}\n    Port 22\n    IdentityFile ${var.ssh_private_key_path}"
+    "Host ${vm.name}\n    HostName ${split("/", var.proxmox_vms[vm_key].ip)[0]}\n    User ${var.proxmox_vms[vm_key].vm_username}\n    Port 22\n    IdentityFile ${var.ssh_private_key_path}"
   ])
 }
 
@@ -32,7 +32,7 @@ output "complete_ssh_config" {
 
 ${join("\n\n", [
   for vm_key, vm in proxmox_virtual_environment_vm.vm : 
-  "Host ${vm.name}\n    HostName ${split("/", var.proxmox_vms[vm_key].ip)[0]}\n    User ${vm.vm_username}\n    Port 22\n    IdentityFile ${var.ssh_private_key_path}"
+  "Host ${vm.name}\n    HostName ${split("/", var.proxmox_vms[vm_key].ip)[0]}\n    User ${var.proxmox_vms[vm_key].vm_username}\n    Port 22\n    IdentityFile ${var.ssh_private_key_path}"
 ])}
 
 # End of Talos VMs Configuration
@@ -44,7 +44,7 @@ output "ssh_connection_commands" {
   description = "SSH connection commands for each VM"
   value = {
     for vm_key, vm in proxmox_virtual_environment_vm.vm : 
-    vm.name => "ssh ${vm.vm_username}@${split("/", var.proxmox_vms[vm_key].ip)[0]}"
+    vm.name => "ssh ${var.proxmox_vms[vm_key].vm_username}@${split("/", var.proxmox_vms[vm_key].ip)[0]}"
   }
 }
 
