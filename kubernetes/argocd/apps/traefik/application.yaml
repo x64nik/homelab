@@ -13,7 +13,6 @@ spec:
         values: |
           additionalArguments:
             - "--log.level=INFO"
-        createNamespace: true
       
   destination:
     server: https://kubernetes.default.svc
