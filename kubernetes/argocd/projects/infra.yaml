@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infrastructure
+  namespace: argocd
+spec:
+  description: Infrastructure components
+  
+  # Allow all repos
+  sourceRepos:
+    - '*'
+  
+  # Allow all destinations
+  destinations:
+    - namespace: '*'
+      server: '*'
+  
+  # Allow all resources
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
