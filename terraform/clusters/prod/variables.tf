@@ -16,6 +16,15 @@ variable "proxmox_vms_talos" {
     memory = optional(number, 4096)
     disk_size = optional(number, 20)
 
+    # optional extra disk for VM module
+    extra_disk = optional(object({
+      enabled      = optional(bool, false)
+      datastore_id = optional(string)
+      interface    = optional(string, "scsi0")
+      ssd          = optional(bool, true)
+      size         = optional(number, 30)
+    }))
+
   })
   )
 }
