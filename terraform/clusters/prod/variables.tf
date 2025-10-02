@@ -1,19 +1,19 @@
 variable "proxmox_vms_talos" {
   type = map(object({
-    id     = number
-    ip     = string
-    name = string
+    id         = number
+    ip         = string
+    name       = string
     controller = optional(bool)
-    tags = list(string)
+    tags       = list(string)
 
     node_name = optional(string, "bravo")
-    bridge = optional(string, "vmbr0")
+    bridge    = optional(string, "vmbr0")
 
 
     # hardware
     cpu_cores = optional(number, 1)
-    cpu_type = optional(string, "host")
-    memory = optional(number, 4096)
+    cpu_type  = optional(string, "host")
+    memory    = optional(number, 4096)
     disk_size = optional(number, 20)
 
     # optional extra disk for VM module
@@ -25,7 +25,7 @@ variable "proxmox_vms_talos" {
       size         = optional(number, 30)
     }))
 
-  })
+    })
   )
 }
 
@@ -52,7 +52,7 @@ variable "datastore_id" {
 variable "cluster_dependencies" {
   description = "Cluster core dependencies without this cluster health checks may fail"
   type        = any
-  default = []
+  default     = []
 }
 
 variable "cluster_name" {
@@ -109,9 +109,9 @@ variable "lb_ip_pools" {
 variable "l2_announcement_policies" {
   description = "Map of L2 announcement policies"
   type = map(object({
-    interfaces          = list(string)
-    external_ips        = bool
-    load_balancer_ips   = bool
+    interfaces        = list(string)
+    external_ips      = bool
+    load_balancer_ips = bool
   }))
   default = {}
 }
