@@ -34,11 +34,11 @@ k8sServicePort: 6443
 
 # Optional features
 hubble:
-  enabled: false
+  enabled: true
   relay:
-    enabled: false
+    enabled: true
   ui:
-    enabled: false
+    enabled: true
 
 # Monitoring
 prometheus:
