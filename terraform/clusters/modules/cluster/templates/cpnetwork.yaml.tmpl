@@ -1,0 +1,20 @@
+machine:
+  kubelet:
+    extraArgs:
+      rotate-server-certificates: true
+  network:
+    interfaces:
+      - interface: eth0
+        addresses:
+          - ${cpip}/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: ${gateway}
+        vip:
+          ip: ${vip}
+cluster:
+  apiServer:
+    certSANs:
+      - ${cpip}
+      - ${vip}
+      - 127.0.0.1

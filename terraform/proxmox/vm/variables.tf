@@ -6,7 +6,7 @@ variable "proxmox_vms" {
     vm_username = string
     vm_password = string
 
-    ssh_public_key = optional(list(string), [])
+    ssh_public_key = optional(list(string), ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINRUe1B1ZMW7ZLA6YP0cI5ddsw/fZOZOAYBby698BV2H home"])
     ip             = string
 
     disk_datastore_id = string
@@ -31,7 +31,7 @@ variable "proxmox_vms" {
 }
 
 variable "proxmox_endpoint" {
-  default = "https://192.168.0.100:8006/"
+  default = "https://192.168.0.101:8006/"
   type    = string
 }
 
@@ -46,11 +46,11 @@ variable "gateway" {
 }
 
 variable "node_name" {
-  default = "alpha"
+  default = "bravo"
   type    = string
 }
 variable "cpu_cores" {
-  default = 2
+  default = 1
   type    = number
 }
 variable "cpu_type" {

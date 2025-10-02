@@ -1,0 +1,221 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Generic EKS Node Group Template with Parameterized Taints and Labels
+
+Parameters:
+  Environment:
+    Type: String
+    Default: production
+    Description: Tag to specify the deployment environment
+
+  Owner:
+    Type: String
+    Default: cloud-team
+    Description: Tag to identify resource owner
+
+  CostCenter:
+    Type: String
+    Default: CC-12345
+    Description: Tag to associate cost center
+
+  NodeGroupName:
+    Type: String
+    Description: Node group name
+
+  NodeInstanceType:
+    Type: String
+    Default: t3.medium
+    Description: EC2 instance type
+
+  NodeGroupScalingConfigMinSize:
+    Type: Number
+    Default: 1
+    Description: Minimum size of node group
+
+  NodeGroupScalingConfigMaxSize:
+    Type: Number
+    Default: 2
+    Description: Maximum size of node group
+
+  NodeGroupScalingConfigDesiredSize:
+    Type: Number
+    Default: 1
+    Description: Desired size of node group
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: EC2 key pair name
+
+  ClusterControlPlaneSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: EKS control plane security group
+
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VPC ID for worker nodes
+
+  ClusterName:
+    Type: String
+    Description: Name of the EKS Cluster
+
+  AmiType:
+    Type: String
+    Default: AL2023_x86_64_STANDARD
+    AllowedValues:
+      - AL2_x86_64
+      - AL2_x86_64_GPU
+      - AL2_ARM_64
+      - AL2023_x86_64_STANDARD
+      - AL2023_x86_64_NVIDIA
+      - AL2023_x86_64_NEURON
+      - AL2023_ARM_64_STANDARD
+      - AL2023_ARM_64_NVIDIA
+      - BOTTLEROCKET_x86_64
+      - BOTTLEROCKET_x86_64_NVIDIA
+      - BOTTLEROCKET_ARM_64
+      - BOTTLEROCKET_ARM_64_NVIDIA
+
+  Subnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Subnets for worker nodes
+
+  NodeDiskSize:
+    Type: Number
+    Default: 30
+    Description: EBS volume size
+
+  MaxPodsPerNode:
+    Type: Number
+    Default: 50
+    MinValue: 1
+    MaxValue: 250
+    Description: Maximum pods per node
+
+  NodeLabels:
+    Type: String
+    Default: workload-type=generic
+    Description: Node labels (key=value,...)
+
+  NodeTaints:
+    Type: String
+    Default: ""
+    Description: Optional taints (key=value:effect,...)
+
+Conditions:
+  HasNodeTaints: !Not [!Equals [!Ref NodeTaints, ""]]
+
+Resources:
+
+  NodeInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ec2.amazonaws.com]
+            Action: [sts:AssumeRole]
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+
+  NodeInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles: [!Ref NodeInstanceRole]
+
+  NodeLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub "${NodeGroupName}-launch-template"
+      LaunchTemplateData:
+        InstanceType: !Ref NodeInstanceType
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: !Sub "${NodeGroupName}-node"
+              - Key: Environment
+                Value: !Ref Environment
+              - Key: Owner
+                Value: !Ref Owner
+              - Key: CostCenter
+                Value: !Ref CostCenter
+        BlockDeviceMappings:
+          - DeviceName: /dev/xvda
+            Ebs:
+              VolumeSize: !Ref NodeDiskSize
+              VolumeType: gp3
+              DeleteOnTermination: true
+              Encrypted: true
+        MetadataOptions:
+          HttpEndpoint: enabled
+          HttpTokens: required
+          HttpPutResponseHopLimit: 2
+          InstanceMetadataTags: enabled
+        UserData:
+          Fn::Base64: !Sub
+            - |
+              MIME-Version: 1.0
+              Content-Type: multipart/mixed; boundary="==MYBOUNDARY=="
+
+              --==MYBOUNDARY==
+              Content-Type: text/x-shellscript; charset="utf-8"
+
+              #!/bin/bash
+              set -o xtrace
+              /etc/eks/bootstrap.sh ${ClusterName} \
+                --use-max-pods false \
+                --kubelet-extra-args '--max-pods=${MaxPodsPerNode} --node-labels=${NodeLabels}${TaintArg}'
+
+              --==MYBOUNDARY==--
+            - TaintArg: !If
+                - HasNodeTaints
+                - !Sub " --register-with-taints=${NodeTaints}"
+                - ""
+
+  GenericNodeGroup:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      NodegroupName: !Ref NodeGroupName
+      ClusterName: !Ref ClusterName
+      NodeRole: !GetAtt NodeInstanceRole.Arn
+      AmiType: !Ref AmiType
+      Subnets: !Ref Subnets
+      LaunchTemplate:
+        Id: !Ref NodeLaunchTemplate
+        Version: !GetAtt NodeLaunchTemplate.LatestVersionNumber
+      ScalingConfig:
+        MinSize: !Ref NodeGroupScalingConfigMinSize
+        DesiredSize: !Ref NodeGroupScalingConfigDesiredSize
+        MaxSize: !Ref NodeGroupScalingConfigMaxSize
+      Labels:
+        workload-type: !Select [1, !Split ["=", !Ref NodeLabels]]
+      Taints:
+        !If
+          - HasNodeTaints
+          - - Key: !Select [0, !Split ["=", !Select [0, !Split [":", !Ref NodeTaints]]]]
+              Value: !Select [1, !Split ["=", !Select [0, !Split [":", !Ref NodeTaints]]]]
+              Effect: !Select [1, !Split [":", !Ref NodeTaints]]
+          - !Ref AWS::NoValue
+      Tags:
+        Name: !Ref NodeGroupName
+
+Outputs:
+  NodeInstanceRole:
+    Description: The node instance role
+    Value: !GetAtt NodeInstanceRole.Arn
+
+  NodeInstanceProfile:
+    Description: The instance profile used by EC2 instances
+    Value: !Ref NodeInstanceProfile
+
+  NodeGroupName:
+    Description: The EKS node group name
+    Value: !Ref NodeGroupName
+
+  AmiType:
+    Description: The AMI type used for the node group
+    Value: !Ref AmiType
