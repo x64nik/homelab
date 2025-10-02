@@ -16,6 +16,15 @@ variable "proxmox_vms_talos" {
     memory = optional(number, 4096)
     disk_size = optional(number, 20)
 
+    # optional extra disk
+    extra_disk = optional(object({
+      enabled      = optional(bool, false)
+      datastore_id = optional(string)
+      interface    = optional(string, "scsi0")
+      ssd          = optional(bool, true)
+      size         = optional(number, 30)
+    }))
+
   })
   )
 }
@@ -34,6 +43,10 @@ variable "gateway" {
 
 variable "talos_version" {
   default = "v1.9.5"
+}
+
+variable "talos_iso_sha" {
+  default = "ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515"
 }
 
 variable "datastore_id" {

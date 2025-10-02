@@ -35,33 +35,3 @@ module "talos_cluster" {
   cluster_dependencies = var.cluster_dependencies
   enable_mayastor = var.enable_mayastor
 }
-
-module "cilium" {
-  source = "../modules/helm"
-  depends_on = [
-    module.talos_cluster.kubeconfig,
-    module.talos_cluster.bootstrap,
-    module.talos_cluster.post_bootstrap_wait,
-  ]
-
-  controller_ip = var.cp_vip
-  cluster_ca_certificate = module.talos_cluster.cluster_ca_certificate
-  client_certificate     = module.talos_cluster.client_certificate
-  client_key            = module.talos_cluster.client_key
-
-  helm_charts = var.helm_charts
-}
-
-module "cilium_networking" {
-  source = "../modules/cilium"
-  depends_on = [
-    module.cilium
-  ]
-
-  cluster_ca_certificate = module.talos_cluster.cluster_ca_certificate
-  client_certificate     = module.talos_cluster.client_certificate
-  client_key            = module.talos_cluster.client_key
-
-  lb_ip_pools             = var.lb_ip_pools
-  l2_announcement_policies = var.l2_announcement_policies
-}

@@ -17,9 +17,9 @@ resource "proxmox_virtual_environment_download_file" "talos_nocloud_image" {
   datastore_id = "local"
   node_name    = var.bootstrap_node_name
   file_name               = "talos-${var.talos_version}-nocloud-amd64.img"
-  url                     = "https://factory.talos.dev/image/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515/${var.talos_version}/nocloud-amd64.raw.gz"
+  url                     = "https://factory.talos.dev/image/${var.talos_iso_sha}/${var.talos_version}/nocloud-amd64.raw.gz"
   decompression_algorithm = "gz"
-  overwrite               = true
+  overwrite               = false
   lifecycle {
     prevent_destroy = false
   }
@@ -50,7 +50,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   network_device {
     bridge = each.value.bridge
   }
-  boot_order = ["virtio0", "scsi0", "net0"]
+  boot_order = ["virtio0"]
   disk {
     datastore_id = var.datastore_id
     file_id      = proxmox_virtual_environment_download_file.talos_nocloud_image.id
@@ -59,11 +59,14 @@ resource "proxmox_virtual_environment_vm" "vm" {
     size         = each.value.disk_size
   }
 
-  disk {
-    datastore_id = "nvme0n1"
-    interface    = "scsi0"
-    ssd          = true
-    size         = 30 # GB
+  dynamic "disk" {
+    for_each = (try(each.value.extra_disk.enabled, false) ? [1] : [])
+    content {
+      datastore_id = coalesce(try(each.value.extra_disk.datastore_id, null), var.datastore_id)
+      interface    = try(each.value.extra_disk.interface, "scsi0")
+      ssd          = try(each.value.extra_disk.ssd, true)
+      size         = try(each.value.extra_disk.size, 30)
+    }
   }
 
   operating_system {

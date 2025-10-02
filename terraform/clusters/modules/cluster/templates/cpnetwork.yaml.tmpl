@@ -12,9 +12,3 @@ machine:
             gateway: ${gateway}
         vip:
           ip: ${vip}
-cluster:
-  apiServer:
-    certSANs:
-      - ${cpip}
-      - ${vip}
-      - 127.0.0.1
