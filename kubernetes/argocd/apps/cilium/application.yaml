@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: infrastructure
   sources:
     - repoURL: https://helm.cilium.io/
       chart: cilium
