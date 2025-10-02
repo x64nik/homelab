@@ -5,6 +5,9 @@ ipam:
 kubeProxyReplacement: true
 l2announcements:
   enabled: true
+externalIPs:
+  enabled: true
+devices: "enx+"
 
 securityContext:
   capabilities:
