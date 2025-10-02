@@ -58,3 +58,6 @@ gatewayAPI:
   enabled: true
   enableAlpn: true
   enableAppProtocol: true
+
+envoyConfig:
+  enabled: true
