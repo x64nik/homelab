@@ -44,7 +44,7 @@ hubble:
 prometheus:
   enabled: true
   serviceMonitor:
-    enabled:  true  # Enable if you have Prometheus operator
+    enabled:  false  # Enable if you have Prometheus operator
 
 # BGP (if needed)
 bgpControlPlane:
