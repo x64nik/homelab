@@ -21,7 +21,7 @@ spec:
     
     - repoURL: https://github.com/x64nik/homelab.git
       targetRevision: main
-      path: kubernetes/helm-charts/cilium/home-ip-pool.yaml
+      path: kubernetes/helm-charts/cilium
 
   destination:
     server: https://kubernetes.default.svc
