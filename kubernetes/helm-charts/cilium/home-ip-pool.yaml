@@ -1,4 +1,13 @@
 apiVersion: "cilium.io/v2alpha1"
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: home-pool
+  namespace: kube-system
+spec:
+  externalIPs: true
+  loadBalancerIPs: true
+---
+apiVersion: "cilium.io/v2alpha1"
 kind: CiliumLoadBalancerIPPool
 metadata:
   name: home-pool
@@ -6,4 +15,5 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
 spec:
   blocks:
-    - cidr: "192.168.0.30/31"
+    - start: "192.168.0.30"
+      stop: "192.168.0.35"
