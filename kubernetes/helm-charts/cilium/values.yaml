@@ -3,6 +3,14 @@ ipam:
   mode: kubernetes
 
 kubeProxyReplacement: true
+l2announcements:
+  enabled: true
+
+k8sClientRateLimit:
+  qps:
+    - QPS
+  burst:
+    - BURST
 
 securityContext:
   capabilities:
