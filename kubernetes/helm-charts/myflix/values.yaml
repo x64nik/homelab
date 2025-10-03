@@ -46,9 +46,9 @@ jellyseerr:
     enabled: true
     className: traefik
     hosts:
-      - host: myflix.home.rushidarunte.com
+      - host: jellyseerr.home.rushidarunte.com
         paths:
-          - path: /jellyseerr
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -242,9 +242,9 @@ qbittorrent:
     enabled: true
     className: traefik
     hosts:
-      - host: myflix.home.rushidarunte.com
+      - host: qbit.home.rushidarunte.com
         paths:
-          - path: /qbit
+          - path: /
             pathType: Prefix
             backend:
               service:
