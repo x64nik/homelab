@@ -1,0 +1,29 @@
+# Helm specific files
+charts/
+Chart.lock
+.helmignore
+
+# Kubernetes configuration (if not part of the chart)
+*.kubeconfig
+kubeconfig*
+
+# Build artifacts and temporary files
+*.tgz
+*.tar.gz
+*.zip
+*.log
+tmp/
+temp/
+.DS_Store # macOS specific
+Thumbs.db # Windows specific
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Dependency management files (if applicable, e.g., Go modules)
+vendor/
+go.mod
+go.sum
