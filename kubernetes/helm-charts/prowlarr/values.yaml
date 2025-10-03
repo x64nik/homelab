@@ -142,7 +142,7 @@ storage:
     name: "prowlarr-config-pvc"
     # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
     # existingClaim: ""
-    capacity: 3Gi
+    capacity: 2Gi
     accessModes:
       - ReadWriteMany
 

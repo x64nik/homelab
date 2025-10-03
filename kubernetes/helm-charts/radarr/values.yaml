@@ -142,7 +142,7 @@ storage:
     name: "radarr-config-pvc"
     # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
     # existingClaim: ""
-    capacity: 5Gi
+    capacity: 3Gi
     accessModes:
       - ReadWriteMany
 

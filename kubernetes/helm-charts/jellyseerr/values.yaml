@@ -142,7 +142,7 @@ storage:
     name: "jellyseerr-config-pvc"
     # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
     # existingClaim: ""
-    capacity: 2Gi
+    capacity: 5Gi
     accessModes:
       - ReadWriteMany
 
