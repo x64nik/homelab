@@ -27,3 +27,5 @@ Thumbs.db # Windows specific
 vendor/
 go.mod
 go.sum
+
+test.yaml

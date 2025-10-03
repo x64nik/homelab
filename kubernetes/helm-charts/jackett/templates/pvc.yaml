@@ -1,0 +1,33 @@
+{{- if .Values.storage.mediaPersistentVolumeClaim.createPersistentVolumeClaim }}
+---
+# PersistentVolumeClaim for jackett Media
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.storage.mediaPersistentVolumeClaim.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.storage.mediaPersistentVolumeClaim.capacity }}
+  volumeName: {{ .Values.storage.mediaPersistentVolume.name }}
+  storageClassName: ""
+{{- end }}
+---
+{{- if .Values.storage.configPersistentVolumeClaim.createPersistentVolumeClaim }}
+# PersistentVolumeClaim for jackett Config
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.storage.configPersistentVolumeClaim.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ .Values.storage.configPersistentVolumeClaim.capacity }}
+  storageClassName: {{ .Values.storage.existingClass }}
+{{- end }}

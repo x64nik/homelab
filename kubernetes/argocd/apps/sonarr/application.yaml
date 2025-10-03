@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sonarr
+  namespace: argocd
+spec:
+  project: media-stack
+  source:
+    repoURL: https://github.com/x64nik/homelab.git
+    targetRevision: main
+    path: kubernetes/helm-charts/sonarr
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: media-stack
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
