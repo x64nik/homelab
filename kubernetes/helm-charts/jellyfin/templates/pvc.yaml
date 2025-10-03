@@ -29,5 +29,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.storage.configPersistentVolumeClaim.capacity }}
-  storageClassName: longhorn
+  storageClassName: {{ .Values.storage.existingClass }}
 {{- end }}
