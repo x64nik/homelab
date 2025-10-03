@@ -111,7 +111,7 @@ sonarr:
   config:
     data:
       TZ: "Asia/Kolkata"
-      RADARR__SERVER__URLBASE: /sonarr
+      SONARR__SERVER__URLBASE: /sonarr
   envFrom:
     - configMapRef:
         name: sonarr-config
