@@ -68,6 +68,10 @@ jellyseerr:
 radarr:
   enabled: true
   replicaCount: 1
+  config:
+    data:
+      TZ: "Asia/Kolkata"
+      RADARR__SERVER__URLBASE: /radarr
   ingress:
     enabled: true
     className: traefik
