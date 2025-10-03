@@ -57,7 +57,8 @@ jellyseerr:
     # Volume Configuration
     volumeMounts:
       - name: media
-        mountPath: /config
+        mountPath: /app/config
+        subPath: jellyseerr-config 
 
     volumes:
       - name: media
