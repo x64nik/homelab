@@ -10,10 +10,10 @@ jellyfin:
           - path: /
             pathType: Prefix
             backend:
-                service:
-                  name: jellyfin
-                  port:
-                    number: 8096 
+              service:
+                name: jellyfin
+                port:
+                  number: 8096 
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
@@ -46,6 +46,11 @@ jellyseerr:
         paths:
           - path: /jellyseerr
             pathType: Prefix
+            backend:
+              service:
+                name: jellyseerr
+                port:
+                  number: 5055 
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
@@ -70,6 +75,11 @@ radarr:
         paths:
           - path: /radarr
             pathType: Prefix
+            backend:
+              service:
+                name: jellyseerr
+                port:
+                  number: 7878 
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
