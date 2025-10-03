@@ -103,7 +103,7 @@ radarr:
         mountPath: /config
         subPath: radarr-config
       - name: media
-        mountPath: /downloads
+        mountPath: /downloads/movies
         subPath: qbittorrent/downloads
         readOnly: false
       - name: media
