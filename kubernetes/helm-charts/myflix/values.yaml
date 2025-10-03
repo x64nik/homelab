@@ -104,6 +104,7 @@ radarr:
         subPath: radarr-config
       - name: media
         mountPath: /data
+        subPath: qbittorrent/downloads
         readOnly: false
 
     volumes:
