@@ -123,6 +123,11 @@ sonarr:
         paths:
           - path: /sonarr
             pathType: Prefix
+            backend:
+              service:
+                name: sonarr
+                port:
+                  number: 8989
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
@@ -143,6 +148,28 @@ sonarr:
 prowlarr:
   enabled: true
   replicaCount: 1
+
+  config:
+    data:
+      TZ: "Asia/Kolkata"
+      PROWLARR__SERVER__URLBASE: /prowlarr
+  envFrom:
+    - configMapRef:
+        name: prowlarr-config
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+      - host: myflix.home.rushidarunte.com
+        paths:
+          - path: /prowlarr
+            pathType: Prefix
+            backend:
+              service:
+                name: prowlarr
+                port:
+                  number: 9696
+
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
