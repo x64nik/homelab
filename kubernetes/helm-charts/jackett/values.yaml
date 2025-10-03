@@ -69,7 +69,7 @@ resources:
 
 livenessProbe: |
   httpGet:
-    path: /health
+    path: /
     port: 9117
   initialDelaySeconds: 10
   periodSeconds: 15
@@ -79,7 +79,7 @@ livenessProbe: |
 
 readinessProbe: |
   httpGet:
-    path: /health
+    path: /
     port: 9117
   initialDelaySeconds: 5
   periodSeconds: 10
@@ -89,7 +89,7 @@ readinessProbe: |
 
 startupProbe: |
   httpGet:
-    path: /health
+    path: /
     port: 9117
   initialDelaySeconds: 30
   timeoutSeconds: 1
