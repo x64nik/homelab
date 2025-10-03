@@ -1,6 +1,19 @@
 jellyfin:
   enabled: true
   replicaCount: 1
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+      - host: jellyfin-home-lab.rushidarunte.com
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+                service:
+                  name: jellyfin
+                  port:
+                    number: 8096 
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
