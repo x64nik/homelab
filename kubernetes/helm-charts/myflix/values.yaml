@@ -78,8 +78,6 @@ radarr:
     data:
       TZ: "Asia/Kolkata"
       RADARR__SERVER__URLBASE: /radarr
-      WEBUI_PORT: "8080"
-      TORRENTING_PORT: "6881"
   envFrom:
     - configMapRef:
         name: radarr-config
@@ -232,6 +230,14 @@ qbittorrent:
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
+  config:
+  data:
+    TZ: "Asia/Kolkata"
+    WEBUI_PORT: "8080"
+    TORRENTING_PORT: "6881"
+  envFrom:
+    - configMapRef:
+        name: qbittorrent-config
   ingress:
     enabled: true
     className: traefik
