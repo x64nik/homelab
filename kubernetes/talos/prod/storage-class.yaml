@@ -11,3 +11,4 @@ parameters:
   fromBackup: ""
   fsType: "ext4"
   nfsOptions: "vers=4.1,noresvport,softerr"  # Enable NFS for RWX
+  accessMode: "ReadWriteMany"
