@@ -117,7 +117,7 @@ storage:
   # storageClassName: ""
 
   # Use existing storage class. createStorageClass must be false
-  existingClass: "longhorn-rwx"
+  existingClass: "longhorn"
   
   # isDefault: false
   # provisioner: ""
