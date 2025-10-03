@@ -1,5 +1,4 @@
 # Helm specific files
-charts/
 Chart.lock
 .helmignore
 

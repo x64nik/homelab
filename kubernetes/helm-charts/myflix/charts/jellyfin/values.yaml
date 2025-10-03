@@ -1,0 +1,209 @@
+
+nameOverride: "jellyfin"
+fullnameOverride: "jellyfin"
+
+replicaCount: 3
+
+deploymentAnnotations: {}
+podAnnotations: {}
+
+podSecurityContext: {}
+  # runAsUser: 1000
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+affinity: {}
+  # nodeAffinity:
+  #   requiredDuringSchedulingIgnoredDuringExecution:
+  #     nodeSelectorTerms:
+  #       - matchExpressions:
+  #           - key: topology.kubernetes.io/zone
+  #             operator: In
+  #             values:
+  #               - us-east-1a
+nodeSelector: {}
+
+image:
+  repository: "jellyfin/jellyfin"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  imagePullSecrets: []
+    # - name: myRegistryKey
+
+container:
+  command: []
+  args: []
+
+  ports:
+    - containerPort: 8096
+      name: http
+      protocol: TCP
+    - containerPort: 8920
+      name: https
+      protocol: TCP
+    - containerPort: 1900
+      name: dlna
+      protocol: UDP
+    - containerPort: 7359
+      name: discovery
+      protocol: UDP
+
+# env:
+#   key: value
+
+config:
+  data:
+    TZ: "Asia/Kolkata"
+
+# envFrom:
+#   - configMapRef:
+#       name: jellyfin-config-map
+#   - secretRef:
+#       name: app-data-secret
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe: |
+  httpGet:
+    path: /health
+    port: 8096
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+
+readinessProbe: |
+  httpGet:
+    path: /health
+    port: 8096
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+  successThreshold: 1
+
+startupProbe: |
+  httpGet:
+    path: /health
+    port: 8096
+  initialDelaySeconds: 30
+  timeoutSeconds: 1
+  failureThreshold: 60
+  periodSeconds: 5
+
+daemonset:
+  enabled: false
+
+storage:
+  enabled: true
+  # container mount path
+  # mountPath: ""
+  # Storage Class related values
+  createStorageClass: false
+  # storageClassName: ""
+
+  # Use existing storage class. createStorageClass must be false
+  existingClass: "longhorn"
+  
+  # isDefault: false
+  # provisioner: ""
+  # parameters: {}
+  # allowVolumeExpansion: true
+  # volumeBindingMode: WaitForFirstConsumer
+  # reclaimPolicy: Retain
+
+  mediaPersistentVolume:
+    createPersistentVolume: true
+    name: "jellyfin-media-nfs-pv"
+    capacity: 2Ti
+    accessModes:
+      - ReadWriteMany
+    nfs:
+      server: 192.168.0.104
+      path: "/mnt/MEDIA-SERVER-STORAGE/jellyfin"
+    
+  mediaPersistentVolumeClaim:
+    createPersistentVolumeClaim: true
+    name: "jellyfin-media-nfs-pvc"
+    # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
+    # existingClaim: ""
+    capacity: 2Ti
+    accessModes:
+      - ReadWriteMany
+  
+  
+  configPersistentVolumeClaim:
+    createPersistentVolumeClaim: true
+    name: "jellyfin-config-pvc"
+    # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
+    # existingClaim: ""
+    capacity: 5Gi
+    accessModes:
+      - ReadWriteMany
+
+  # Volume Configuration
+  volumeMounts:
+    - name: config
+      mountPath: /config
+    - name: cache
+      mountPath: /cache
+    - name: media
+      mountPath: /media
+      readOnly: false
+
+  volumes:
+    - name: config
+      persistentVolumeClaim:
+        claimName: jellyfin-config-pvc
+    - name: cache
+      emptyDir: {}
+    - name: media
+      persistentVolumeClaim:
+        claimName: jellyfin-media-nfs-pvc
+
+service:
+  type: ClusterIP
+  ports:
+  - port: 8096
+    targetPort: 8096
+    protocol: TCP
+    name: http
+  - port: 8920
+    targetPort: 8920
+    protocol: TCP
+    name: https
+
+containerPort: 8096
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  labels: {}
+  minReplicas: 1
+  maxReplicas: 3
+  cpuThreshold: 70
+
+  metrics: []
+  behavior: {}
+
+monitoring:
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    path: /metrics
