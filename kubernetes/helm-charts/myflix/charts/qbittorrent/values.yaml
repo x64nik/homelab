@@ -59,7 +59,7 @@ config:
   data:
     TZ: "Asia/Kolkata"
     WEBUI_PORT: "8080"
-    ORRENTING_PORT: "6881"
+    TORRENTING_PORT: "6881"
 
 # envFrom:
 #   - configMapRef:
