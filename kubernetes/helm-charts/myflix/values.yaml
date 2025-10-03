@@ -231,10 +231,10 @@ qbittorrent:
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
   config:
-  data:
-    TZ: "Asia/Kolkata"
-    WEBUI_PORT: "8080"
-    TORRENTING_PORT: "6881"
+    data:
+      TZ: "Asia/Kolkata"
+      WEBUI_PORT: "8080"
+      TORRENTING_PORT: "6881"
   envFrom:
     - configMapRef:
         name: qbittorrent-config
