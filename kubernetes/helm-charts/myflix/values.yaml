@@ -108,6 +108,19 @@ radarr:
 sonarr:
   enabled: true
   replicaCount: 1
+  config:
+    data:
+      TZ: "Asia/Kolkata"
+      RADARR__SERVER__URLBASE: /sonarr
+  envFrom:
+    - configMapRef:
+        name: sonarr-config
+  
+  hosts:
+    - host: myflix.home.rushidarunte.com
+      paths:
+        - path: /sonarr
+          pathType: Prefix
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
