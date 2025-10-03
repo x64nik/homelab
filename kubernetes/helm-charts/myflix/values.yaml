@@ -13,11 +13,6 @@ jellyfin:
         mountPath: /cache
       - name: media
         mountPath: /media
-        subPath: movies
-        readOnly: false
-      - name: media
-        mountPath: /media
-        subPath: tvshows
         readOnly: false
 
     volumes:
