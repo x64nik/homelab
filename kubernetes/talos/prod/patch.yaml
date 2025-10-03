@@ -1,0 +1,14 @@
+machine:
+  kubelet:
+    extraMounts:
+      - destination: /var/nvme01-storage
+        type: bind
+        source: /var/nvme01-storage
+        options:
+          - bind
+          - rshared
+          - rw
+  disks:
+    - device: /dev/sda
+      partitions: 
+        - mountpoint: /var/nvme01-storage

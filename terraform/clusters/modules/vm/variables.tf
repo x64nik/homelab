@@ -42,11 +42,11 @@ variable "gateway" {
 }
 
 variable "talos_version" {
-  default = "v1.9.5"
+  default = "v1.11.2"
 }
 
 variable "talos_iso_sha" {
-  default = "ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515"
+  default = "613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245"
 }
 
 variable "datastore_id" {

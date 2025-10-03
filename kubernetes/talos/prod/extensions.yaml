@@ -1,0 +1,16 @@
+- op: replace
+  path: /machine/kubelet/extraMounts
+  value:
+    - destination: /var/nvme01-storage
+      type: bind
+      source: /var/nvme01-storage
+      options:
+        - bind
+        - rshared
+        - rw
+- op: replace
+  path: /machine/disks
+  value:
+    - device: /dev/sda
+      partitions:
+        - mountpoint: /var/nvme01-storage
