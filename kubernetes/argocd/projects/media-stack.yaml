@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: media-stack
+  namespace: argocd
+spec:
+  description: Media Streaming components
+  
+  # Allow all repos
+  sourceRepos:
+    - '*'
+  
+  # Allow only media-stack destinations
+  destinations:
+    - namespace: 'media-stack'
+      server: '*'
+  
+  # Allow all resources
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
