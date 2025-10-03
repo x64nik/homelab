@@ -72,6 +72,9 @@ radarr:
     data:
       TZ: "Asia/Kolkata"
       RADARR__SERVER__URLBASE: /radarr
+  envFrom:
+    - configMapRef:
+        name: radarr-config
   ingress:
     enabled: true
     className: traefik
