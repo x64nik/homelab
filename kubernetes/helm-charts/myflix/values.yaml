@@ -5,7 +5,7 @@ jellyfin:
     enabled: true
     className: traefik
     hosts:
-      - host: jellyfin-home-lab.rushidarunte.com
+      - host: myflix.home.rushidarunte.com
         paths:
           - path: /
             pathType: Prefix
@@ -38,6 +38,14 @@ jellyfin:
 jellyseerr:
   enabled: true
   replicaCount: 1
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+      - host: myflix.home.rushidarunte.com
+        paths:
+          - path: /jellyseerr
+            pathType: Prefix
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
@@ -54,6 +62,14 @@ jellyseerr:
 radarr:
   enabled: true
   replicaCount: 1
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+      - host: myflix.home.rushidarunte.com
+        paths:
+          - path: /radarr
+            pathType: Prefix
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
@@ -71,7 +87,6 @@ radarr:
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
   
-
 sonarr:
   enabled: true
   replicaCount: 1
