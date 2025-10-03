@@ -1,0 +1,115 @@
+jellyfin:
+  enabled: true
+  replicaCount: 1
+
+jellyseerr:
+  enabled: true
+  replicaCount: 1
+  storage:
+    configPersistentVolumeClaim:
+      createPersistentVolumeClaim: false
+    # Volume Configuration
+    volumeMounts:
+      - name: media
+        mountPath: /config
+
+    volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: jellyfin-media-nfs-pvc
+
+radarr:
+  enabled: true
+  replicaCount: 1
+  storage:
+    configPersistentVolumeClaim:
+      createPersistentVolumeClaim: false
+    # Volume Configuration
+    volumeMounts:
+      - name: media
+        mountPath: /config
+        subPath: radarr-config
+      - name: media
+        mountPath: /data
+        readOnly: false
+
+    volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: jellyfin-media-nfs-pvc
+  
+
+sonarr:
+  enabled: true
+  replicaCount: 1
+  storage:
+    configPersistentVolumeClaim:
+      createPersistentVolumeClaim: false
+    # Volume Configuration
+    volumeMounts:
+      - name: media
+        mountPath: /config
+        subPath: sonarr-config
+      - name: media
+        mountPath: /data
+        readOnly: false
+
+    volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: jellyfin-media-nfs-pvc
+
+prowlarr:
+  enabled: true
+  replicaCount: 1
+  storage:
+    configPersistentVolumeClaim:
+      createPersistentVolumeClaim: false
+    # Volume Configuration
+    volumeMounts:
+      - name: media
+        mountPath: /config
+        subPath: prowlarr-config
+
+    volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: jellyfin-media-nfs-pvc
+
+jackett:
+  enabled: true
+  replicaCount: 1
+  storage:
+    configPersistentVolumeClaim:
+      createPersistentVolumeClaim: false
+    # Volume Configuration
+    volumeMounts:
+      - name: media
+        mountPath: /config
+        subPath: jackett-config
+
+    volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: jellyfin-media-nfs-pvc
+
+qbittorrent:
+  enabled: true
+  replicaCount: 1
+  storage:
+    configPersistentVolumeClaim:
+      createPersistentVolumeClaim: false
+    # Volume Configuration
+    volumeMounts:
+      - name: media
+        mountPath: /config
+        subPath: qbittorrent/config
+      - name: media
+        mountPath: /downloads
+        subPath: qbittorrent/downloads
+        readOnly: false
+
+    volumes:
+      - name: media
+        persistentVolumeClaim:
+          claimName: jellyfin-media-nfs-pvc

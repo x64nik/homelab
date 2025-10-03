@@ -1,0 +1,34 @@
+apiVersion: v2
+name: myflix
+description: My own netfix chart
+version: 1.0.0
+appVersion: "v1.0.0"
+dependencies:
+  - name: jellyfin
+    version: "1.0.0"
+    repository: "file://charts/jellyfin"
+    condition: jellyfin.enabled
+  - name: jellyseerr
+    version: "1.0.0"
+    repository: "file://charts/jellyseerr"
+    condition: jellyseerr.enabled
+  - name: radarr
+    version: "1.0.0"
+    repository: "file://charts/radarr"
+    condition: radarr.enabled
+  - name: sonarr
+    version: "1.0.0"
+    repository: "file://charts/sonarr"
+    condition: sonarr.enabled
+  - name: prowlarr
+    version: "1.0.0"
+    repository: "file://charts/prowlarr"
+    condition: prowlarr.enabled
+  - name: jackett
+    version: "1.0.0"
+    repository: "file://charts/jackett"
+    condition: jackett.enabled
+  - name: qbittorrent
+    version: "1.0.0"
+    repository: "file://charts/qbittorrent"
+    condition: qbittorrent.enabled
