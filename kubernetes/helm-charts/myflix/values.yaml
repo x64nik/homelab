@@ -106,6 +106,10 @@ radarr:
         mountPath: /downloads
         subPath: qbittorrent/downloads
         readOnly: false
+      - name: media
+        mountPath: /data
+        subPath: movies
+        readOnly: false
 
     volumes:
       - name: media
@@ -146,7 +150,12 @@ sonarr:
         mountPath: /config
         subPath: sonarr-config
       - name: media
+        mountPath: /downloads
+        subPath: qbittorrent/downloads
+        readOnly: false
+      - name: media
         mountPath: /data
+        subPath: tvshows
         readOnly: false
 
     volumes:
