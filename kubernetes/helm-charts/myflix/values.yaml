@@ -1,6 +1,8 @@
 jellyfin:
   enabled: true
   replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
   ingress:
     enabled: true
     className: traefik
@@ -38,6 +40,8 @@ jellyfin:
 jellyseerr:
   enabled: true
   replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
   ingress:
     enabled: true
     className: traefik
@@ -68,6 +72,8 @@ jellyseerr:
 radarr:
   enabled: true
   replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
   config:
     data:
       TZ: "Asia/Kolkata"
@@ -108,6 +114,8 @@ radarr:
 sonarr:
   enabled: true
   replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
   config:
     data:
       TZ: "Asia/Kolkata"
@@ -148,7 +156,8 @@ sonarr:
 prowlarr:
   enabled: true
   replicaCount: 1
-
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
   config:
     data:
       TZ: "Asia/Kolkata"
@@ -187,6 +196,8 @@ prowlarr:
 jackett:
   enabled: true
   replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
   ingress:
     enabled: true
     className: traefik
@@ -217,6 +228,8 @@ jackett:
 qbittorrent:
   enabled: true
   replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
   ingress:
     enabled: true
     className: traefik
