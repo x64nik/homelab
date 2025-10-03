@@ -9,12 +9,10 @@ metadata:
     {{- range $key, $value := .Values.ingress.labels }}
     {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
     {{- end }}
-
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
-  
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   {{- if .Values.ingress.tls }}
@@ -28,18 +26,18 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-  {{- range .Values.ingress.hosts }}
+    {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
-        {{- range .paths }}
+          {{- range .paths }}
           - path: {{ .path }}
             pathType: {{ .pathType }}
             backend:
               service:
                 name: {{ include "app.fullname" $ }}
                 port:
-                  number: {{ $.Values.service.port }}
-        {{- end }}
-  {{- end }}
+                  number: {{ .backend.service.port.number | default $.Values.containerPort }}
+          {{- end }}
+    {{- end }}
 {{- end }}
