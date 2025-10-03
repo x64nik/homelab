@@ -187,6 +187,19 @@ prowlarr:
 jackett:
   enabled: true
   replicaCount: 1
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+      - host: myflix.home.rushidarunte.com
+        paths:
+          - path: /jackett
+            pathType: Prefix
+            backend:
+              service:
+                name: jackett
+                port:
+                  number: 9117 
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
@@ -204,6 +217,19 @@ jackett:
 qbittorrent:
   enabled: true
   replicaCount: 1
+  ingress:
+    enabled: true
+    className: traefik
+    hosts:
+      - host: myflix.home.rushidarunte.com
+        paths:
+          - path: /qbit
+            pathType: Prefix
+            backend:
+              service:
+                name: qbittorrent
+                port:
+                  number: 8080 
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: false
