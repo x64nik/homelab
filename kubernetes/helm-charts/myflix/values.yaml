@@ -78,6 +78,7 @@ radarr:
     data:
       TZ: "Asia/Kolkata"
       RADARR__SERVER__URLBASE: /radarr
+      TEST: "test"
   envFrom:
     - configMapRef:
         name: radarr-config
