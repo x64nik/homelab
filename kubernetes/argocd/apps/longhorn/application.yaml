@@ -18,12 +18,12 @@ spec:
             jobEnabled: false
           defaultSettings:
             defaultDataPath: "/var/nvme01-storage"
-          global:
-            tolerations:
-              - operator: "Exists"
-          longhornDriver:
-            tolerations:
-              - operator: "Exists"
+          # global:
+          #   tolerations:
+          #     - operator: "Exists"
+          # longhornDriver:
+          #   tolerations:
+          #     - operator: "Exists"
           service:
             ui:
               type: LoadBalancer
