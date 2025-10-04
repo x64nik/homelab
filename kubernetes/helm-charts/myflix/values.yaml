@@ -177,7 +177,7 @@ sonarr:
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
-      name: "radarr-config-pvc"
+      name: "sonarr-config-pvc"
       capacity: 2Gi
       accessModes:
         - ReadWriteMany
