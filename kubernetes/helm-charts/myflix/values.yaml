@@ -18,23 +18,26 @@ jellyfin:
                   number: 8096 
   storage:
     configPersistentVolumeClaim:
-      createPersistentVolumeClaim: false
+      createPersistentVolumeClaim: true
+      name: "jellyfin-config-pvc"
+      capacity: 8Gi
+      accessModes:
+        - ReadWriteMany
+
     # Volume Configuration
     volumeMounts:
-      - name: media
+      - name: config
         mountPath: /config
-        subPath: jellyfin/config
-      - name: cache
+      - name: config
         mountPath: /cache
       - name: media
         mountPath: /media
         readOnly: false
 
     volumes:
-      - name: cache
-        emptyDir:
-          medium: Memory
-          sizeLimit: 4Gi
+      - name: config
+        persistentVolumeClaim:
+          claimName: jellyfin-config-pvc
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
