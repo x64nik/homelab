@@ -24,6 +24,9 @@ spec:
           longhornDriver:
             tolerations:
               - operator: "Exists"
+          service:
+            ui:
+              type: LoadBalancer
 
   destination:
     server: https://kubernetes.default.svc
