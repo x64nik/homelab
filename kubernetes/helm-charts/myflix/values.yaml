@@ -1,5 +1,5 @@
 jellyfin:
-  enabled: false
+  enabled: true
   replicaCount: 2
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
@@ -63,7 +63,7 @@ jellyfin:
                   - alpha
 
 jellyseerr:
-  enabled: false
+  enabled: true
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
@@ -97,7 +97,7 @@ jellyseerr:
           claimName: jellyseerr-config-pvc
 
 radarr:
-  enabled: false
+  enabled: true
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
@@ -150,7 +150,7 @@ radarr:
           claimName: jellyfin-media-nfs-pvc
   
 sonarr:
-  enabled: false
+  enabled: true
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
@@ -203,7 +203,7 @@ sonarr:
           claimName: jellyfin-media-nfs-pvc
 
 prowlarr:
-  enabled: false
+  enabled: true
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
@@ -247,7 +247,7 @@ prowlarr:
           claimName: prowlarr-config-pvc
 
 jackett:
-  enabled: false
+  enabled: true
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
@@ -283,7 +283,7 @@ jackett:
           claimName: jackett-config-pvc
 
 qbittorrent:
-  enabled: false
+  enabled: true
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
