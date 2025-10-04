@@ -32,7 +32,9 @@ jellyfin:
 
     volumes:
       - name: cache
-        emptyDir: {}
+        emptyDir:
+          medium: Memory
+          sizeLimit: 4Gi
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
