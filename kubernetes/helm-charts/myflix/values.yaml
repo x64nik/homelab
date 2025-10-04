@@ -1,6 +1,6 @@
 jellyfin:
   enabled: true
-  replicaCount: 2
+  replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
   ingress:
