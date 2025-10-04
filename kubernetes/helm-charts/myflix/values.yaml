@@ -36,6 +36,26 @@ jellyfin:
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
+  pdb:
+    enabled: true
+    minAvailable: 1  # Protects during graceful operations
+  # Tolerate the alpha taint so it CAN run there
+  tolerations:
+    - key: "proxmox-node"
+      operator: "Equal"
+      value: "alpha"
+      effect: "NoSchedule"
+  # PREFER alpha nodes, but allow others
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100  # High priority for alpha nodes
+          preference:
+            matchExpressions:
+              - key: proxmox-node
+                operator: In
+                values:
+                  - alpha
 
 jellyseerr:
   enabled: true

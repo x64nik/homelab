@@ -19,6 +19,12 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+
+pdb:
+  enabled: false
+  minAvailable: 1
+
+tolerations: {}
 affinity: {}
   # nodeAffinity:
   #   requiredDuringSchedulingIgnoredDuringExecution:
