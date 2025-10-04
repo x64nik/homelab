@@ -1,5 +1,5 @@
 jellyfin:
-  enabled: false
+  enabled: enable
   replicaCount: 2
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
