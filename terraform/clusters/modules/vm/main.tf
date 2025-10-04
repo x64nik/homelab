@@ -37,6 +37,7 @@ resource "proxmox_virtual_environment_vm" "vm" {
   cpu {
     cores = each.value.cpu_cores
     type  = each.value.cpu_type
+    sockets = each.value.sockets
   }
 
   memory {

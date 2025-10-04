@@ -13,6 +13,7 @@ variable "proxmox_vms_talos" {
     # hardware
     cpu_cores = optional(number, 1)
     cpu_type  = optional(string, "host")
+    sockets   = optional(number, 1)
     memory    = optional(number, 4096)
     disk_size = optional(number, 20)
 
