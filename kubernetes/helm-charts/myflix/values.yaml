@@ -82,17 +82,19 @@ jellyseerr:
                   number: 5055 
   storage:
     configPersistentVolumeClaim:
-      createPersistentVolumeClaim: false
+      createPersistentVolumeClaim: true
+      name: "jellyseerr-config-pvc"
+      capacity: 2Gi
+      accessModes:
+        - ReadWriteMany
     # Volume Configuration
     volumeMounts:
-      - name: media
+      - name: config
         mountPath: /app/config
-        subPath: jellyseerr-config 
-
     volumes:
-      - name: media
+      - name: config
         persistentVolumeClaim:
-          claimName: jellyfin-media-nfs-pvc
+          claimName: jellyseerr-config-pvc
 
 radarr:
   enabled: false
@@ -121,12 +123,15 @@ radarr:
                   number: 7878 
   storage:
     configPersistentVolumeClaim:
-      createPersistentVolumeClaim: false
+      createPersistentVolumeClaim: true
+      name: "radarr-config-pvc"
+      capacity: 2Gi
+      accessModes:
+        - ReadWriteMany
     # Volume Configuration
     volumeMounts:
-      - name: media
+      - name: config
         mountPath: /config
-        subPath: radarr-config
       - name: media
         mountPath: /downloads
         subPath: qbittorrent/downloads
@@ -137,6 +142,9 @@ radarr:
         readOnly: false
 
     volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: radarr-config-pvc
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
@@ -168,22 +176,28 @@ sonarr:
                   number: 8989
   storage:
     configPersistentVolumeClaim:
-      createPersistentVolumeClaim: false
+      createPersistentVolumeClaim: true
+      name: "radarr-config-pvc"
+      capacity: 2Gi
+      accessModes:
+        - ReadWriteMany
     # Volume Configuration
     volumeMounts:
-      - name: media
+      - name: config
         mountPath: /config
-        subPath: sonarr-config
       - name: media
         mountPath: /downloads
         subPath: qbittorrent/downloads
         readOnly: false
       - name: media
-        mountPath: /data
+        mountPath: /data/tvshows
         subPath: tvshows
         readOnly: false
 
     volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: sonarr-config-pvc
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
@@ -216,17 +230,21 @@ prowlarr:
 
   storage:
     configPersistentVolumeClaim:
-      createPersistentVolumeClaim: false
+      createPersistentVolumeClaim: true
+      name: "prowlarr-config-pvc"
+      capacity: 2Gi
+      accessModes:
+        - ReadWriteMany
     # Volume Configuration
     volumeMounts:
-      - name: media
+      - name: config
         mountPath: /config
         subPath: prowlarr-config
 
     volumes:
-      - name: media
+      - name: config
         persistentVolumeClaim:
-          claimName: jellyfin-media-nfs-pvc
+          claimName: prowlarr-config-pvc
 
 jackett:
   enabled: false
@@ -248,17 +266,21 @@ jackett:
                   number: 9117 
   storage:
     configPersistentVolumeClaim:
-      createPersistentVolumeClaim: false
+      createPersistentVolumeClaim: true
+      name: "jackett-config-pvc"
+      capacity: 2Gi
+      accessModes:
+        - ReadWriteMany
     # Volume Configuration
     volumeMounts:
-      - name: media
+      - name: config
         mountPath: /config
         subPath: jackett-config
 
     volumes:
-      - name: media
+      - name: config
         persistentVolumeClaim:
-          claimName: jellyfin-media-nfs-pvc
+          claimName: jackett-config-pvc
 
 qbittorrent:
   enabled: false
@@ -288,18 +310,24 @@ qbittorrent:
                   number: 8080 
   storage:
     configPersistentVolumeClaim:
-      createPersistentVolumeClaim: false
+      createPersistentVolumeClaim: true
+      name: "qbittorrent-config-pvc"
+      capacity: 2Gi
+      accessModes:
+        - ReadWriteMany
     # Volume Configuration
     volumeMounts:
-      - name: media
+      - name: config
         mountPath: /config
-        subPath: qbittorrent/config
       - name: media
         mountPath: /downloads
         subPath: qbittorrent/downloads
         readOnly: false
 
     volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: qbittorrent-config-pvc
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
