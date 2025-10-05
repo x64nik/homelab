@@ -140,7 +140,7 @@ storage:
       - ReadWriteMany
     nfs:
       server: 192.168.0.104
-      path: "/mnt/MEDIA-SERVER-STORAGE/jellyfin"
+      path: "/mnt/tank01/media-server"
     
   mediaPersistentVolumeClaim:
     createPersistentVolumeClaim: true
