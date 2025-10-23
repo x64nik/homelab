@@ -1,0 +1,201 @@
+
+nameOverride: "slskd"
+fullnameOverride: "slskd"
+
+replicaCount: 1
+
+deploymentAnnotations: {}
+podAnnotations: {}
+
+podSecurityContext: {}
+  # runAsUser: 1000
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+affinity: {}
+  # nodeAffinity:
+  #   requiredDuringSchedulingIgnoredDuringExecution:
+  #     nodeSelectorTerms:
+  #       - matchExpressions:
+  #           - key: topology.kubernetes.io/zone
+  #             operator: In
+  #             values:
+  #               - us-east-1a
+nodeSelector: {}
+
+image:
+  repository: "slskd/slskd"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  imagePullSecrets: []
+    # - name: myRegistryKey
+
+container:
+  command: []
+  args: []
+
+  ports:
+    - containerPort: 5030
+      name: http
+      protocol: TCP
+
+# env:
+#   key: value
+
+config:
+  data:
+    TZ: "Asia/Kolkata"
+    SLSKD_REMOTE_CONFIGURATION: true
+
+# envFrom:
+#   - configMapRef:
+#       name: slskd-config-map
+#   - secretRef:
+#       name: app-data-secret
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+livenessProbe: |
+  httpGet:
+    path: /health
+    port: 5030
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 5
+  failureThreshold: 3
+  successThreshold: 1
+
+readinessProbe: |
+  httpGet:
+    path: /health
+    port: 5030
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+  successThreshold: 1
+
+startupProbe: |
+  httpGet:
+    path: /health
+    port: 5030
+  initialDelaySeconds: 30
+  timeoutSeconds: 1
+  failureThreshold: 60
+  periodSeconds: 5
+
+daemonset:
+  enabled: false
+
+storage:
+  enabled: true
+  # container mount path
+  # mountPath: ""
+  # Storage Class related values
+  createStorageClass: false
+  # storageClassName: ""
+
+  # Use existing storage class. createStorageClass must be false
+  existingClass: "longhorn"
+  
+  # isDefault: false
+  # provisioner: ""
+  # parameters: {}
+  # allowVolumeExpansion: true
+  # volumeBindingMode: WaitForFirstConsumer
+  # reclaimPolicy: Retain
+
+  mediaPersistentVolume:
+    createPersistentVolume: false
+  #   name: "slskd-media-nfs-pv"
+  #   capacity: 2Ti
+  #   accessModes:
+  #     - ReadWriteMany
+  #   nfs:
+  #     server: 192.168.0.104
+  #     path: "/mnt/MEDIA-SERVER-STORAGE/jellyfin"
+    
+  mediaPersistentVolumeClaim:
+    createPersistentVolumeClaim: false
+    # name: ""
+    # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
+    # existingClaim: "jellyfin-media-nfs-pvc"
+    # capacity: 2Ti
+    # accessModes:
+    #   - ReadWriteMany
+  
+  
+  configPersistentVolumeClaim:
+    createPersistentVolumeClaim: true
+    name: "slskd-config-pvc"
+    # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
+    # existingClaim: ""
+    capacity: 1Gi
+    accessModes:
+      - ReadWriteMany
+
+  # Volume Configuration
+  volumeMounts:
+    - name: config
+      mountPath: /app
+    - name: media
+      mountPath: /data
+      subPath: "musics"
+
+  volumes:
+    - name: config
+      persistentVolumeClaim:
+        claimName: slskd-config-pvc
+    - name: media
+      persistentVolumeClaim:
+        claimName: jellyfin-media-nfs-pvc
+
+service:
+  type: ClusterIP
+  ports:
+  - port: 5030
+    targetPort: 5030
+    protocol: TCP
+    name: http
+  - port: 5031
+    targetPort: 5031
+    protocol: TCP
+    name: https
+  - port: 50300
+    targetPort: 50300
+    protocol: TCP
+    name: file-sharing
+
+containerPort: 5030
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  labels: {}
+  minReplicas: 1
+  maxReplicas: 3
+  cpuThreshold: 70
+
+  metrics: []
+  behavior: {}
+
+monitoring:
+  serviceMonitor:
+    enabled: false
+    interval: 30s
+    path: /metrics

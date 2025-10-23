@@ -383,3 +383,55 @@ lidarr:
       - name: media
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
+
+slskd:
+  enabled: true
+  replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
+  config:
+    data:
+      TZ: "Asia/Kolkata"
+      SLSKD_REMOTE_CONFIGURATION: "true"
+  envFrom:
+    - configMapRef:
+        name: slskd-config
+  ingress:
+    enabled: false
+    className: traefik
+    hosts:
+      - host: myflix.home.rushidarunte.com
+        paths:
+          - path: /slskd
+            pathType: Prefix
+            backend:
+              service:
+                name: slskd
+                port:
+                  number: 5030
+  
+soularr:
+  enabled: true
+  replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
+  config:
+    data:
+      TZ: "Asia/Kolkata"
+      SCRIPT_INTERVAL: 300
+  envFrom:
+    - configMapRef:
+        name: soularr-config
+  ingress:
+    enabled: false
+    className: traefik
+    hosts:
+      - host: myflix.home.rushidarunte.com
+        paths:
+          - path: /soularr
+            pathType: Prefix
+            backend:
+              service:
+                name: soularr
+                port:
+                  number: 8686

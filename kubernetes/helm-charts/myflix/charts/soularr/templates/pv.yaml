@@ -1,0 +1,20 @@
+{{- if .Values.storage.mediaPersistentVolume.createPersistentVolume }}
+# PersistentVolume for soularr NFS share
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.storage.mediaPersistentVolume.name }}
+spec:
+  capacity:
+    storage: {{ .Values.storage.mediaPersistentVolume.capacity }}  # Adjust based on your needs
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: {{ .Values.storage.mediaPersistentVolume.nfs.server }}  # Replace with your TrueNAS IP
+    path: {{ .Values.storage.mediaPersistentVolume.nfs.path }}  # Replace with your actual NFS export path
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - noatime
+{{- end }}

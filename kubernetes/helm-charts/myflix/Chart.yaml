@@ -38,3 +38,11 @@ dependencies:
     version: "1.0.0"
     repository: "file://charts/lidarr"
     condition: lidarr.enabled
+  - name: slskd
+    version: "1.0.0"
+    repository: "file://charts/slskd"
+    condition: slskd.enabled
+  - name: soularr
+    version: "1.0.0"
+    repository: "file://charts/soularr"
+    condition: soularr.enabled
