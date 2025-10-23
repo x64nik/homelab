@@ -340,11 +340,12 @@ navidrome:
   config:
     data:
       TZ: "Asia/Kolkata"
+      ND_BASEURL: "/navidrome"
   envFrom:
     - configMapRef:
         name: navidrome-config
   ingress:
-    enabled: false
+    enabled: true
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
