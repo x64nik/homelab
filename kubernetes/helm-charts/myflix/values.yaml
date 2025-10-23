@@ -118,9 +118,9 @@ radarr:
             pathType: Prefix
             backend:
               service:
-                name: jellyseerr
+                name: radarr
                 port:
-                  number: 7878 
+                  number: 7878
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
@@ -337,13 +337,19 @@ lidarr:
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
+  config:
+    data:
+      TZ: "Asia/Kolkata"
+  envFrom:
+    - configMapRef:
+        name: lidarr-config
   ingress:
     enabled: false
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
         paths:
-          - path: /
+          - path: /lidarr
             pathType: Prefix
             backend:
               service:
@@ -351,69 +357,29 @@ lidarr:
                 port:
                   number: 8686
   storage:
-    enabled: true
-    
-    mediaPersistentVolume:
-      createPersistentVolume: true
-      name: "lidarr-media-nfs-pv"
-      capacity: 1Ti
-      accessModes:
-        - ReadWriteMany
-      nfs:
-        server: 192.168.0.104
-        path: "/mnt/tank01/music"
-    
-    mediaPersistentVolumeClaim:
-      createPersistentVolumeClaim: true
-      name: "lidarr-media-nfs-pvc"
-      # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
-      # existingClaim: ""
-      capacity: 1Ti
-      accessModes:
-        - ReadWriteMany
-
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "lidarr-config-pvc"
       capacity: 2Gi
       accessModes:
         - ReadWriteMany
-
     # Volume Configuration
     volumeMounts:
       - name: config
         mountPath: /config
-      - name: music
+      - name: media
         mountPath: /data/Musics
+        subPath: "musics"
         readOnly: false
-      - name: downloads
+      - name: media
         mountPath: /data/downloads/torrents
+        subPath: "qbittorrent/downloads"
         readOnly: false
 
     volumes:
       - name: config
         persistentVolumeClaim:
           claimName: lidarr-config-pvc
-      - name: music
+      - name: media
         persistentVolumeClaim:
-          claimName: lidarr-media-nfs-pvc
-  pdb:
-    enabled: true
-    minAvailable: 1  # Protects during graceful operations
-  # Tolerate the alpha taint so it CAN run there
-  tolerations:
-    - key: "proxmox-node"
-      operator: "Equal"
-      value: "alpha"
-      effect: "NoSchedule"
-  # PREFER alpha nodes, but allow others
-  affinity:
-    nodeAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100  # High priority for alpha nodes
-          preference:
-            matchExpressions:
-              - key: proxmox-node
-                operator: In
-                values:
-                  - alpha
+          claimName: jellyfin-media-nfs-pvc
