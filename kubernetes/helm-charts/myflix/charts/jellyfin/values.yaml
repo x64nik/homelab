@@ -2,7 +2,7 @@
 nameOverride: "jellyfin"
 fullnameOverride: "jellyfin"
 
-replicaCount: 3
+replicaCount: 1
 
 deploymentAnnotations: {}
 podAnnotations: {}
