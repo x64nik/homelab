@@ -418,7 +418,7 @@ soularr:
   config:
     data:
       TZ: "Asia/Kolkata"
-      SCRIPT_INTERVAL: 300
+      SCRIPT_INTERVAL: "300"
   envFrom:
     - configMapRef:
         name: soularr-config
