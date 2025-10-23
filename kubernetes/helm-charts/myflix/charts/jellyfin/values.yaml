@@ -37,7 +37,7 @@ affinity: {}
 nodeSelector: {}
 
 image:
-  repository: "lscr.io/linuxserver/lidarr"
+  repository: "jellyfin/jellyfin"
   tag: "latest"
   pullPolicy: IfNotPresent
   imagePullSecrets: []
