@@ -19,12 +19,6 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-
-pdb:
-  enabled: false
-  minAvailable: 1
-
-tolerations: {}
 affinity: {}
   # nodeAffinity:
   #   requiredDuringSchedulingIgnoredDuringExecution:
@@ -48,18 +42,9 @@ container:
   args: []
 
   ports:
-    - containerPort: 8096
+    - containerPort: 8686
       name: http
       protocol: TCP
-    - containerPort: 8920
-      name: https
-      protocol: TCP
-    - containerPort: 1900
-      name: dlna
-      protocol: UDP
-    - containerPort: 7359
-      name: discovery
-      protocol: UDP
 
 # env:
 #   key: value
@@ -76,7 +61,7 @@ config:
 
 resources:
   requests:
-    cpu: 100m
+    cpu: 50m
     memory: 128Mi
   # limits:
   #   cpu: 100m
@@ -85,7 +70,7 @@ resources:
 livenessProbe: |
   httpGet:
     path: /health
-    port: 8096
+    port: 7878
   initialDelaySeconds: 10
   periodSeconds: 15
   timeoutSeconds: 5
@@ -95,7 +80,7 @@ livenessProbe: |
 readinessProbe: |
   httpGet:
     path: /health
-    port: 8096
+    port: 7878
   initialDelaySeconds: 5
   periodSeconds: 10
   timeoutSeconds: 3
@@ -105,7 +90,7 @@ readinessProbe: |
 startupProbe: |
   httpGet:
     path: /health
-    port: 8096
+    port: 7878
   initialDelaySeconds: 30
   timeoutSeconds: 1
   failureThreshold: 60
@@ -133,23 +118,23 @@ storage:
   # reclaimPolicy: Retain
 
   mediaPersistentVolume:
-    createPersistentVolume: true
-    name: "lidarr-media-nfs-pv"
-    capacity: 1Ti
-    accessModes:
-      - ReadWriteMany
-    nfs:
-      server: 192.168.0.104
-      path: "/mnt/tank01/music"
+    createPersistentVolume: false
+  #   name: "lidarr-media-nfs-pv"
+  #   capacity: 2Ti
+  #   accessModes:
+  #     - ReadWriteMany
+  #   nfs:
+  #     server: 192.168.0.104
+  #     path: "/mnt/MEDIA-SERVER-STORAGE/jellyfin"
     
   mediaPersistentVolumeClaim:
-    createPersistentVolumeClaim: true
-    name: "lidarr-media-nfs-pvc"
+    createPersistentVolumeClaim: false
+    # name: ""
     # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
-    # existingClaim: ""
-    capacity: 1Ti
-    accessModes:
-      - ReadWriteMany
+    # existingClaim: "jellyfin-media-nfs-pvc"
+    # capacity: 2Ti
+    # accessModes:
+    #   - ReadWriteMany
   
   
   configPersistentVolumeClaim:
@@ -165,21 +150,22 @@ storage:
   volumeMounts:
     - name: config
       mountPath: /config
-    - name: cache
-      mountPath: /cache
     - name: media
-      mountPath: /media
+      mountPath: /data/Musics
+      subPath: "musics"
+      readOnly: false
+    - name: media
+      mountPath: /data/downloads/torrents
+      subPath: "qbittorrent/downloads"
       readOnly: false
 
   volumes:
     - name: config
       persistentVolumeClaim:
         claimName: lidarr-config-pvc
-    - name: cache
-      emptyDir: {}
     - name: media
       persistentVolumeClaim:
-        claimName: lidarr-media-nfs-pvc
+        claimName: jellyfin-media-nfs-pvc
 
 service:
   type: ClusterIP
