@@ -28,3 +28,4 @@ go.mod
 go.sum
 
 test.yaml
+external-secrets.yaml

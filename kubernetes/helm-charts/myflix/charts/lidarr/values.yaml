@@ -151,12 +151,8 @@ storage:
     - name: config
       mountPath: /config
     - name: media
-      mountPath: /data/Musics
-      subPath: "musics"
-      readOnly: false
-    - name: media
-      mountPath: /data/downloads/torrents
-      subPath: "qbittorrent/downloads"
+      mountPath: /data/musics
+      subPath: "slskd/downloads"
       readOnly: false
 
   volumes:

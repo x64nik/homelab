@@ -155,7 +155,9 @@ storage:
       mountPath: /downloads
       subPath: "slskd/downloads"
       readOnly: false
-
+    - name: app-config
+      mountPath: /data/config.ini
+      subPath: config.ini
   volumes:
     - name: config
       persistentVolumeClaim:
@@ -163,6 +165,9 @@ storage:
     - name: media
       persistentVolumeClaim:
         claimName: jellyfin-media-nfs-pvc
+    - name: app-config
+      secret:
+        secretName: soularr-config
 
 service:
   type: ClusterIP
