@@ -46,3 +46,7 @@ dependencies:
     version: "1.0.0"
     repository: "file://charts/soularr"
     condition: soularr.enabled
+  - name: navidrome
+    version: "1.0.0"
+    repository: "file://charts/navidrome"
+    condition: navidrome.enabled

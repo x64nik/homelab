@@ -332,6 +332,31 @@ qbittorrent:
         persistentVolumeClaim:
           claimName: jellyfin-media-nfs-pvc
 
+navidrome:
+  enabled: true
+  replicaCount: 1
+  deploymentAnnotations:
+    reloader.stakater.com/auto: "true"
+  config:
+    data:
+      TZ: "Asia/Kolkata"
+  envFrom:
+    - configMapRef:
+        name: navidrome-config
+  ingress:
+    enabled: false
+    className: traefik
+    hosts:
+      - host: myflix.home.rushidarunte.com
+        paths:
+          - path: /navidrome
+            pathType: Prefix
+            backend:
+              service:
+                name: navidrome
+                port:
+                  number: 4533
+
 lidarr:
   enabled: true
   replicaCount: 1
