@@ -1,8 +1,8 @@
 
-nameOverride: "jellyfin"
-fullnameOverride: "jellyfin"
+nameOverride: "lidarr"
+fullnameOverride: "lidarr"
 
-replicaCount: 3
+replicaCount: 1
 
 deploymentAnnotations: {}
 podAnnotations: {}
@@ -70,7 +70,7 @@ config:
 
 # envFrom:
 #   - configMapRef:
-#       name: jellyfin-config-map
+#       name: lidarr-config-map
 #   - secretRef:
 #       name: app-data-secret
 
@@ -134,30 +134,30 @@ storage:
 
   mediaPersistentVolume:
     createPersistentVolume: true
-    name: "jellyfin-media-nfs-pv"
-    capacity: 2Ti
+    name: "lidarr-media-nfs-pv"
+    capacity: 1Ti
     accessModes:
       - ReadWriteMany
     nfs:
       server: 192.168.0.104
-      path: "/mnt/tank01/media-server"
+      path: "/mnt/tank01/music"
     
   mediaPersistentVolumeClaim:
     createPersistentVolumeClaim: true
-    name: "jellyfin-media-nfs-pvc"
+    name: "lidarr-media-nfs-pvc"
     # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
     # existingClaim: ""
-    capacity: 2Ti
+    capacity: 1Ti
     accessModes:
       - ReadWriteMany
   
   
   configPersistentVolumeClaim:
     createPersistentVolumeClaim: true
-    name: "jellyfin-config-pvc"
+    name: "lidarr-config-pvc"
     # use existing claim if not creating a new one. createPersistentVolumeClaim must be false
     # existingClaim: ""
-    capacity: 5Gi
+    capacity: 2Gi
     accessModes:
       - ReadWriteMany
 
@@ -174,26 +174,22 @@ storage:
   volumes:
     - name: config
       persistentVolumeClaim:
-        claimName: jellyfin-config-pvc
+        claimName: lidarr-config-pvc
     - name: cache
       emptyDir: {}
     - name: media
       persistentVolumeClaim:
-        claimName: jellyfin-media-nfs-pvc
+        claimName: lidarr-media-nfs-pvc
 
 service:
   type: ClusterIP
   ports:
-  - port: 8096
-    targetPort: 8096
+  - port: 8686
+    targetPort: 8686
     protocol: TCP
     name: http
-  - port: 8920
-    targetPort: 8920
-    protocol: TCP
-    name: https
 
-containerPort: 8096
+containerPort: 8686
 
 ingress:
   enabled: false
