@@ -1,0 +1,28 @@
+nameOverride: "common-postgres"
+fullnameOverride: "common-postgres"
+namespaceOverride: "cnpg-database"
+
+type: postgresql
+
+version:
+  postgresql: "17"
+
+mode: standalone
+logLevel: "info"
+
+cluster:
+  replicas: 3
+  storage:
+    size: 8Gi
+    storageClass: "longhorn"
+  # resources:
+  #   limits:
+  #     cpu: 2000m
+  #     memory: 8Gi
+  #   requests:
+  #     cpu: 2000m
+  #     memory: 8Gi
+  # envFrom:
+  #   - secretRef:
+  #       name: common-postgres-secrets
+  #       optional: true

@@ -1,0 +1,30 @@
+# Alternative: Using values from a Git repository
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: common-postgres
+  namespace: argocd
+spec:
+  project: infrastructure
+  sources:
+    - chart: cluster
+      repoURL: https://cloudnative-pg.github.io/charts
+      targetRevision: 0.3.1
+      helm:
+        releaseName: common-postgres
+        valueFiles:
+          - $values/kubernetes/helm-charts/cnpg-cluster/common-postgres-values.yaml
+    - repoURL: https://github.com/x64nik/homelab.git
+      targetRevision: main
+      ref: values
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cnpg-database
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
