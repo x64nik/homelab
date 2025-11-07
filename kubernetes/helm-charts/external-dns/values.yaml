@@ -3,7 +3,7 @@ provider:
   name: rfc2136
 
 extraArgs:
-  - --rfc2136-host="192.168.0.1"
+  - --rfc2136-host=192.168.0.1
   - --rfc2136-port=53
   - --rfc2136-zone=home.rushidarunte.com
   - --rfc2136-tsig-secret-alg=hmac-sha256
