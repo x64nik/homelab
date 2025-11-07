@@ -429,7 +429,7 @@ slskd:
     - configMapRef:
         name: slskd-config
   ingress:
-    enabled: false
+    enabled: true
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
