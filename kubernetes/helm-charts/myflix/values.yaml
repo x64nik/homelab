@@ -6,6 +6,8 @@ jellyfin:
   ingress:
     enabled: true
     className: traefik
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     hosts:
       - host: myflix.home.rushidarunte.com
         paths:
@@ -15,7 +17,11 @@ jellyfin:
               service:
                 name: jellyfin
                 port:
-                  number: 8096 
+                  number: 8096
+    tls:
+      - hosts:
+          - myflix.home.rushidarunte.com
+        secretName: myflix-home-tls
   storage:
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
