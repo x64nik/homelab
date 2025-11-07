@@ -1,24 +1,24 @@
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: argocd-server
+  name: argocd-ingress
   namespace: argocd
+  annotations:
+    # cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(`argocd.home.rushidarunte.com`)
-      priority: 10
-      services:
-        - name: argocd-server
-          port: 80
-    - kind: Rule
-      match: Host(`argocd.home.rushidarunte.com`) && Header(`Content-Type`, `application/grpc`)
-      priority: 11
-      services:
-        - name: argocd-server
-          port: 80
-          scheme: h2c
-  tls:
-    certResolver: default
+  ingressClassName: traefik
+  rules:
+  - host: argocd.home.rushidarunte.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80
+  # tls:
+  # - hosts:
+  #   - argocd.home.rushidarunte.com
+  #   secretName: argocd-home-tls
