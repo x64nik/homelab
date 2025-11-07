@@ -1,0 +1,54 @@
+extraArgs:
+  - --rfc2136-host="dns.home.rushidarunte.com"
+  - --rfc2136-port=53
+  - --rfc2136-zone=home.rushidarunte.com
+  - --rfc2136-tsig-secret-alg=hmac-sha256
+  - --rfc2136-tsig-axfr
+
+# kubectl create secret generic rfc2136-keys --from-literal=rfc2136-tsig-secret='xxx' --from-literal=rfc2136-tsig-keyname='k8s-external-dns-key' -n external-dns
+env:
+  - name: "EXTERNAL_DNS_RFC2136_TSIG_SECRET"
+    valueFrom:
+      secretKeyRef:
+        name: rfc2136-keys
+        key: rfc2136-tsig-secret
+  - name: "EXTERNAL_DNS_RFC2136_TSIG_KEYNAME"
+    valueFrom:
+      secretKeyRef:
+        name: rfc2136-keys
+        key: rfc2136-tsig-keyname
+
+serviceMonitor:
+  # -- If `true`, create a `ServiceMonitor` resource to support the _Prometheus Operator_.
+  enabled: false
+  # -- Additional labels for the `ServiceMonitor`.
+  additionalLabels: {}
+  # -- Annotations to add to the `ServiceMonitor`.
+  annotations: {}
+  # -- (string) If set create the `ServiceMonitor` in an alternate namespace.
+  namespace:  # @schema type:[string, null]; default: null
+  # -- (string) If set override the _Prometheus_ default interval.
+  interval:  # @schema type:[string, null]; default: null
+  # -- (string) If set override the _Prometheus_ default scrape timeout.
+  scrapeTimeout:  # @schema type:[string, null]; default: null
+  # -- (string) If set overrides the _Prometheus_ default scheme.
+  scheme:  # @schema type:[string, null]; default: null
+  # -- Configure the `ServiceMonitor` [TLS config](https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#tlsconfig).
+  tlsConfig: {}
+  # -- (string) Provide a bearer token file for the `ServiceMonitor`.
+  bearerTokenFile:  # @schema type:[string, null]; default: null
+  # -- [Relabel configs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config) to apply to samples before ingestion.
+  relabelings: []
+  # -- [Metric relabel configs](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs) to apply to samples before ingestion.
+  metricRelabelings: []
+  # -- Provide target labels for the `ServiceMonitor`.
+  targetLabels: []
+
+# -- Log level.
+logLevel: info  # @schema enum:[panic, debug, info, warning, error, fatal]; type:string; default: "info"
+
+# -- Log format.
+logFormat: text  # @schema enum:["text", "json"]; type:string; default: "text"
+
+# -- Interval for DNS updates.
+interval: 1m
