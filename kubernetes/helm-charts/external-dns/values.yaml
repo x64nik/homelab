@@ -1,3 +1,7 @@
+
+provider: 
+  name: rfc2136
+
 extraArgs:
   - --rfc2136-host="dns.home.rushidarunte.com"
   - --rfc2136-port=53
