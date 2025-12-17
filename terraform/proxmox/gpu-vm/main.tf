@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "proxmox" {
-  endpoint = "https://192.168.0.100:8006/"
+  endpoint = "https://192.168.0.102:8006/"
   insecure = true # Only needed if your Proxmox server is using a self-signed certificate
 }
 
@@ -31,8 +31,8 @@ resource "proxmox_virtual_environment_vm" "vm" {
   tags        = each.value.tags
   node_name   = var.node_name
   on_boot     = false
-  # machine = "q35"
-  # bios = "ovmf"
+  machine = "q35"
+  bios = "ovmf"
 
   dynamic "efi_disk" {
     for_each = lookup(each.value, "enable_efi", false) ? [1] : []
