@@ -35,8 +35,8 @@ jellyfin:
     volumeMounts:
       - name: config
         mountPath: /config
-      - name: config
-        mountPath: /cache
+      # - name: config
+      #   mountPath: /cache
       - name: media
         mountPath: /media
         readOnly: false
