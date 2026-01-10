@@ -23,6 +23,7 @@ jellyfin:
           - myflix.home.rushidarunte.com
         secretName: myflix-home-tls
   storage:
+    existingClass: "ceph-block"
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "jellyfin-config-pvc"
@@ -87,6 +88,7 @@ jellyseerr:
                 port:
                   number: 5055 
   storage:
+    existingClass: "ceph-block"
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "jellyseerr-config-pvc"
@@ -128,6 +130,7 @@ radarr:
                 port:
                   number: 7878
   storage:
+    existingClass: "ceph-block"
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "radarr-config-pvc"
@@ -181,6 +184,7 @@ sonarr:
                 port:
                   number: 8989
   storage:
+    existingClass: "ceph-block"
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "sonarr-config-pvc"
@@ -235,6 +239,7 @@ prowlarr:
                   number: 9696
 
   storage:
+    existingClass: "ceph-block"
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "prowlarr-config-pvc"
@@ -271,6 +276,7 @@ jackett:
                 port:
                   number: 9117 
   storage:
+    existingClass: "ceph-block"
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "jackett-config-pvc"
@@ -315,6 +321,7 @@ qbittorrent:
                 port:
                   number: 8080 
   storage:
+    existingClass: "ceph-block"
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "qbittorrent-config-pvc"
@@ -350,6 +357,8 @@ navidrome:
   envFrom:
     - configMapRef:
         name: navidrome-config
+  storage:
+    existingClass: "ceph-block"
   ingress:
     enabled: true
     className: traefik
@@ -389,6 +398,7 @@ lidarr:
                 port:
                   number: 8686
   storage:
+    existingClass: "ceph-block"
     configPersistentVolumeClaim:
       createPersistentVolumeClaim: true
       name: "lidarr-config-pvc"
@@ -428,6 +438,8 @@ slskd:
   envFrom:
     - configMapRef:
         name: slskd-config
+  storage:
+    existingClass: "ceph-block"
   ingress:
     enabled: true
     className: traefik
@@ -454,6 +466,8 @@ soularr:
   envFrom:
     - configMapRef:
         name: soularr-config
+  storage:
+    existingClass: "ceph-block"
   ingress:
     enabled: false
     className: traefik
