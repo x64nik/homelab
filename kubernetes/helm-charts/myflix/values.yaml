@@ -29,7 +29,7 @@ jellyfin:
       name: "jellyfin-config-pvc"
       capacity: 8Gi
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
 
     # Volume Configuration
     volumeMounts:
@@ -94,7 +94,7 @@ jellyseerr:
       name: "jellyseerr-config-pvc"
       capacity: 2Gi
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
     # Volume Configuration
     volumeMounts:
       - name: config
@@ -136,7 +136,7 @@ radarr:
       name: "radarr-config-pvc"
       capacity: 2Gi
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
     # Volume Configuration
     volumeMounts:
       - name: config
@@ -190,7 +190,7 @@ sonarr:
       name: "sonarr-config-pvc"
       capacity: 2Gi
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
     # Volume Configuration
     volumeMounts:
       - name: config
@@ -245,7 +245,7 @@ prowlarr:
       name: "prowlarr-config-pvc"
       capacity: 2Gi
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
     # Volume Configuration
     volumeMounts:
       - name: config
@@ -282,7 +282,7 @@ jackett:
       name: "jackett-config-pvc"
       capacity: 2Gi
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
     # Volume Configuration
     volumeMounts:
       - name: config
@@ -327,7 +327,7 @@ qbittorrent:
       name: "qbittorrent-config-pvc"
       capacity: 2Gi
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
     # Volume Configuration
     volumeMounts:
       - name: config
@@ -404,7 +404,7 @@ lidarr:
       name: "lidarr-config-pvc"
       capacity: 2Gi
       accessModes:
-        - ReadWriteMany
+        - ReadWriteOnce
     # Volume Configuration
     volumeMounts:
       - name: config
