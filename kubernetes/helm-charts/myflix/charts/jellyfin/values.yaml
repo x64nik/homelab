@@ -137,7 +137,7 @@ storage:
     name: "jellyfin-media-nfs-pv"
     capacity: 2Ti
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
     nfs:
       server: 192.168.0.104
       path: "/mnt/tank01/media-server"
@@ -149,7 +149,7 @@ storage:
     # existingClaim: ""
     capacity: 2Ti
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
   
   
   configPersistentVolumeClaim:
@@ -159,7 +159,7 @@ storage:
     # existingClaim: ""
     capacity: 5Gi
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
 
   # Volume Configuration
   volumeMounts:

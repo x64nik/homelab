@@ -130,7 +130,7 @@ storage:
   #   name: "qbittorrent-media-nfs-pv"
   #   capacity: 2Ti
   #   accessModes:
-  #     - ReadWriteMany
+  #     - ReadWriteOnce
   #   nfs:
   #     server: 192.168.0.104
   #     path: "/mnt/MEDIA-SERVER-STORAGE/jellyfin"
@@ -142,7 +142,7 @@ storage:
     # existingClaim: "jellyfin-media-nfs-pvc"
     # capacity: 2Ti
     # accessModes:
-    #   - ReadWriteMany
+    #   - ReadWriteOnce
   
   
   configPersistentVolumeClaim:
@@ -152,7 +152,7 @@ storage:
     # existingClaim: ""
     capacity: 2Gi
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
 
   # Volume Configuration
   volumeMounts:

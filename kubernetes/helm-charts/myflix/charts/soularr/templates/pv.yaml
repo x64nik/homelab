@@ -8,7 +8,7 @@ spec:
   capacity:
     storage: {{ .Values.storage.mediaPersistentVolume.capacity }}  # Adjust based on your needs
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   nfs:
     server: {{ .Values.storage.mediaPersistentVolume.nfs.server }}  # Replace with your TrueNAS IP
