@@ -8,6 +8,7 @@ variable "proxmox_vms" {
 
     ssh_public_key = optional(list(string), ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINRUe1B1ZMW7ZLA6YP0cI5ddsw/fZOZOAYBby698BV2H home"])
     ip             = string
+    dns_servers = optional(list(string), ["192.168.0.1", "1.1.1.1"])
 
     disk_datastore_id = string
     enable_efi = optional(bool, false)

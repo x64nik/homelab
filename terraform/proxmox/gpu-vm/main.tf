@@ -78,6 +78,11 @@ resource "proxmox_virtual_environment_vm" "vm" {
       }
     }
 
+    dns {
+      domain = each.value.name
+      servers = each.vale.dns_servers
+    }
+
     user_account {
       keys     = each.value.ssh_public_key
       password = each.value.vm_password
