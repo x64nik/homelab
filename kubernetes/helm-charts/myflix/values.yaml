@@ -426,7 +426,7 @@ qbittorrent:
               value: /qbit
         filters:
           - type: URLRewrite
-            requestRedirect:
+            URLRewrite:
               path:
                 type: ReplacePrefixMatch
                 replacePrefixMatch: /
