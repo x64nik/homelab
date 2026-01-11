@@ -29,6 +29,46 @@ global:
           mode: Terminate
           certificateRefs:
             - name: myflix-home-tls
+      - name: http
+        port: 80
+        protocol: HTTP
+        hostname:
+          - "qbit.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: 
+          - "qbit.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: myflix-home-tls
+      - name: http
+        port: 80
+        protocol: HTTP
+        hostname:
+          - "jellyseerr.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: 
+          - "jellyseerr.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: myflix-home-tls
   certManager:
     enabled: true
     # Issuer name (namespace-scoped)

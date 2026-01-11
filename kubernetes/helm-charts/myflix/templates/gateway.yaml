@@ -15,12 +15,10 @@ spec:
   - name: {{ .name }}
     port: {{ .port }}
     protocol: {{ .protocol }}
-
     {{- with .hostname }}
     hostname:
     {{ toYaml . | nindent 6 }}
     {{- end }}
-
     {{- if .allowedRoutes }}
     allowedRoutes:
       {{- toYaml .allowedRoutes | nindent 6 }}
