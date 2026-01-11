@@ -425,7 +425,7 @@ qbittorrent:
               type: PathPrefix
               value: /qbit
         filters:
-          - type: RequestRedirect
+          - type: URLRewrite
             requestRedirect:
               path:
                 type: ReplacePrefixMatch
