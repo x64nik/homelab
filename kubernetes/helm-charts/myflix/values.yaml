@@ -415,15 +415,22 @@ qbittorrent:
     - configMapRef:
         name: qbittorrent-config
   route: 
-    enabled: false
+    enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
     hostnames:
-      - qbit.home.rushidarunte.com
+      - myflix.home.rushidarunte.com
     rules:
       - matches:
           - path:
               type: PathPrefix
-              value: /
+              value: /qbit
+        filters:
+          - type: RequestRedirect
+            requestRedirect:
+              path:
+                type: ReplacePrefixMatch
+                replacePrefixMatch: /
+              statusCode: 302
   ingress:
     enabled: false
     className: traefik
