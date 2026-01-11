@@ -430,7 +430,6 @@ qbittorrent:
               path:
                 type: ReplacePrefixMatch
                 replacePrefixMatch: /
-              statusCode: 302
   ingress:
     enabled: false
     className: traefik
