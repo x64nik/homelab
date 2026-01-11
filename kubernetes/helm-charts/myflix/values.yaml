@@ -115,6 +115,11 @@ jellyfin:
           - path:
               type: PathPrefix
               value: /
+        filters:
+          - type: RequestRedirect
+            requestRedirect:
+              scheme: https
+              statusCode: 301
   storage:
     existingClass: "ceph-block"
     configPersistentVolumeClaim:
@@ -460,11 +465,6 @@ qbittorrent:
           - path:
               type: PathPrefix
               value: /
-        filters:
-          - type: RequestRedirect
-            requestRedirect:
-              scheme: https
-              statusCode: 301
   ingress:
     enabled: false
     className: traefik

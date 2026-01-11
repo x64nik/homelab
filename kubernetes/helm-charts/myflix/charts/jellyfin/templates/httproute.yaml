@@ -30,38 +30,50 @@ spec:
     {{- end }}
   {{- end }}
   {{- else }}
-  # Fallback to parent chart's gateway
   parentRefs:
-  - name: {{ .Release.Name }}-gateway
-    namespace: {{ .Release.Namespace }}
+    - name: {{ .Release.Name }}-gateway
+      namespace: {{ .Release.Namespace }}
   {{- end }}
+
   {{- with .Values.route.hostnames }}
   hostnames:
-  {{- toYaml . | nindent 2 }}
+{{ toYaml . | nindent 4 }}
   {{- end }}
+
   rules:
   {{- range .Values.route.rules }}
   - matches:
     {{- if .matches }}
-    {{- toYaml .matches | nindent 4 }}
+{{ toYaml .matches | nindent 4 }}
     {{- else }}
     - path:
         type: PathPrefix
         value: /
     {{- end }}
-    {{- if .filters }}
+
+    {{- with .filters }}
     filters:
-    {{- toYaml .filters | nindent 4 }}
+{{ toYaml . | nindent 6 }}
     {{- end }}
+
+    {{- $hasRedirect := false }}
+    {{- range .filters }}
+    {{- if eq .type "RequestRedirect" }}
+    {{- $hasRedirect = true }}
+    {{- end }}
+    {{- end }}
+
+    {{- if not $hasRedirect }}
     backendRefs:
     {{- if .backendRefs }}
-    {{- toYaml .backendRefs | nindent 4 }}
+{{ toYaml .backendRefs | nindent 6 }}
     {{- else }}
-    - name: {{ include "app.fullname" $ }}
-      port: {{ $.Values.containerPort }}
-      {{- if .weight }}
-      weight: {{ .weight }}
-      {{- end }}
+      - name: {{ include "app.fullname" $ }}
+        port: {{ $.Values.containerPort }}
+        {{- if .weight }}
+        weight: {{ .weight }}
+        {{- end }}
+    {{- end }}
     {{- end }}
   {{- end }}
 {{- end }}
