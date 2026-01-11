@@ -5,7 +5,7 @@ global:
     annotations:
       cert-manager.io/issuer: myflix-issuer
     listeners:
-      - name: http
+      - name: myflix-http
         port: 80
         protocol: HTTP
         hostname:
@@ -13,7 +13,7 @@ global:
         allowedRoutes:
           namespaces:
             from: All
-      - name: https
+      - name: myflix-https
         port: 443
         protocol: HTTPS
         hostname: 
@@ -25,6 +25,46 @@ global:
           mode: Terminate
           certificateRefs:
             - name: myflix-home-tls
+      - name: qbit-http
+        port: 80
+        protocol: HTTP
+        hostname:
+          - "qbit.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+      - name: qbit-https
+        port: 443
+        protocol: HTTPS
+        hostname: 
+          - "qbit.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: qbit-home-tls
+      - name: jellyseerr-http
+        port: 80
+        protocol: HTTP
+        hostname:
+          - "jellyseerr.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+      - name: jellyseerr-https
+        port: 443
+        protocol: HTTPS
+        hostname: 
+          - "jellyseerr.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: jellyseerr-home-tls
   certManager:
     enabled: true
     # Issuer name (namespace-scoped)
