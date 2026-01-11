@@ -20,7 +20,7 @@ spec:
   {{- range .Values.route.parentRefs }}
   - name: {{ .name }}
     {{- if .namespace }}
-    namespace: {{ .namespace }}
+    namespace: {{ .namespace | default .Release.Namespace}}
     {{- end }}
     {{- if .sectionName }}
     sectionName: {{ .sectionName }}

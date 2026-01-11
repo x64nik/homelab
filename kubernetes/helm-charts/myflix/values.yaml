@@ -108,6 +108,10 @@ jellyfin:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    parentRefs:
+      - name: myflix-gateway
+        # namespace: default   # or {{ .Release.Namespace }}
+        port: 80            # ⚠ Important! Only HTTP listener
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
