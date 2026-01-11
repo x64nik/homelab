@@ -8,16 +8,14 @@ global:
       - name: myflix-http
         port: 80
         protocol: HTTP
-        hostname:
-          - "myflix.home.rushidarunte.com"
+        hostname: "myflix.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
       - name: myflix-https
         port: 443
         protocol: HTTPS
-        hostname: 
-          - "myflix.home.rushidarunte.com"
+        hostname:  "myflix.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
@@ -28,16 +26,14 @@ global:
       - name: qbit-http
         port: 80
         protocol: HTTP
-        hostname:
-          - "qbit.home.rushidarunte.com"
+        hostname: "qbit.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
       - name: qbit-https
         port: 443
         protocol: HTTPS
-        hostname: 
-          - "qbit.home.rushidarunte.com"
+        hostname:  "qbit.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
@@ -48,16 +44,14 @@ global:
       - name: jellyseerr-http
         port: 80
         protocol: HTTP
-        hostname:
-          - "jellyseerr.home.rushidarunte.com"
+        hostname: "jellyseerr.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
       - name: jellyseerr-https
         port: 443
         protocol: HTTPS
-        hostname: 
-          - "jellyseerr.home.rushidarunte.com"
+        hostname:  "jellyseerr.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
