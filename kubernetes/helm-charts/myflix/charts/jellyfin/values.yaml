@@ -198,6 +198,20 @@ containerPort: 8096
 ingress:
   enabled: false
 
+route: 
+  enabled: false
+  # type: httproute  # Switch between "httproute" and "ingress"
+  # hostnames:
+  #   - jellyfin.example.com
+  # parentRefs:
+  #   - name: media-gateway
+  #     namespace: media
+  # rules:
+  #   - matches:
+  #       - path:
+  #           type: PathPrefix
+  #           value: /
+
 autoscaling:
   enabled: false
   labels: {}

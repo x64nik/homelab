@@ -1,10 +1,57 @@
+global:
+  gateway:
+    enabled: true
+    gatewayClassName: cilium
+    annotations:
+      cert-manager.io/issuer: myflix-issuer
+    listeners:
+      - name: http
+        port: 80
+        protocol: HTTP
+        hostname: "myflix.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+      - name: https
+        port: 443
+        protocol: HTTPS
+        hostname: "myflix.home.rushidarunte.com"
+        allowedRoutes:
+          namespaces:
+            from: All
+        tls:
+          mode: Terminate
+          certificateRefs:
+            - name: myflix-home-tls
+  certManager:
+    enabled: true
+    # Issuer name (namespace-scoped)
+    issuerName: myflix-issuer
+    
+    # ACME server
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # For staging/testing:
+    # server: https://acme-staging-v02.api.letsencrypt.org/directory
+    
+    # Email for Let's Encrypt notifications
+    email: contact@rushidarunte.com
+    
+    # Cloudflare DNS-01 challenge
+    cloudflare:
+      apiTokenSecretName: cloudflare-api-token
+      apiTokenSecretKey: api-token
+
+    # Optional: solver selector
+    solvers:
+      selector: {}
+
 jellyfin:
   enabled: true
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
   ingress:
-    enabled: true
+    enabled: false
     className: traefik
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -22,6 +69,16 @@ jellyfin:
       - hosts:
           - myflix.home.rushidarunte.com
         secretName: myflix-home-tls
+  route: 
+    enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
   storage:
     existingClass: "ceph-block"
     configPersistentVolumeClaim:
@@ -74,8 +131,18 @@ jellyseerr:
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
-  ingress:
+  route: 
     enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - jellyseerr.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+  ingress:
+    enabled: false
     className: traefik
     hosts:
       - host: jellyseerr.home.rushidarunte.com
@@ -116,8 +183,18 @@ radarr:
   envFrom:
     - configMapRef:
         name: radarr-config
-  ingress:
+  route: 
     enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /radarr
+  ingress:
+    enabled: false
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
@@ -170,8 +247,18 @@ sonarr:
   envFrom:
     - configMapRef:
         name: sonarr-config
-  ingress:
+  route: 
     enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /sonarr
+  ingress:
+    enabled: false
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
@@ -224,8 +311,18 @@ prowlarr:
   envFrom:
     - configMapRef:
         name: prowlarr-config
-  ingress:
+  route: 
     enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /prowlarr
+  ingress:
+    enabled: false
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
@@ -262,8 +359,18 @@ jackett:
   replicaCount: 1
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
-  ingress:
+  route: 
     enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /jackett
+  ingress:
+    enabled: false
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
@@ -307,8 +414,18 @@ qbittorrent:
   envFrom:
     - configMapRef:
         name: qbittorrent-config
-  ingress:
+  route: 
     enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - qbit.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /
+  ingress:
+    enabled: false
     className: traefik
     hosts:
       - host: qbit.home.rushidarunte.com
@@ -359,8 +476,18 @@ navidrome:
         name: navidrome-config
   storage:
     existingClass: "ceph-block"
-  ingress:
+  route: 
     enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /navidrome
+  ingress:
+    enabled: false
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
@@ -384,6 +511,16 @@ lidarr:
   envFrom:
     - configMapRef:
         name: lidarr-config
+  route: 
+    enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /lidarr
   ingress:
     enabled: false
     className: traefik
@@ -440,8 +577,18 @@ slskd:
         name: slskd-config
   storage:
     existingClass: "ceph-block"
-  ingress:
+  route: 
     enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /slskd
+  ingress:
+    enabled: false
     className: traefik
     hosts:
       - host: myflix.home.rushidarunte.com
@@ -468,6 +615,16 @@ soularr:
         name: soularr-config
   storage:
     existingClass: "ceph-block"
+  route: 
+    enabled: true
+    type: httproute  # Switch between "httproute" and "ingress"
+    hostnames:
+      - myflix.home.rushidarunte.com
+    rules:
+      - matches:
+          - path:
+              type: PathPrefix
+              value: /soularr
   ingress:
     enabled: false
     className: traefik

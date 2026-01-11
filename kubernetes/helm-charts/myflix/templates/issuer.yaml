@@ -1,0 +1,28 @@
+# templates/issuer.yaml
+{{- if .Values.global.certManager.enabled }}
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ .Values.global.certManager.issuerName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  acme:
+    # ACME server URL
+    server: {{ .Values.global.certManager.server }}
+    # Email for Let's Encrypt notifications
+    email: {{ .Values.global.certManager.email }}
+    # Secret to store ACME account private key
+    privateKeySecretRef:
+      name: {{ .Values.global.certManager.issuerName }}-acme-key
+    solvers:
+    # Cloudflare DNS-01 challenge
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: {{ .Values.global.certManager.cloudflare.apiTokenSecretName }}
+            key: {{ .Values.global.certManager.cloudflare.apiTokenSecretKey | default "api-token" }}
+      {{- if .Values.global.certManager.solvers.selector }}
+      selector:
+        {{- toYaml .Values.global.certManager.solvers.selector | nindent 8 }}
+      {{- end }}
+{{- end }}
