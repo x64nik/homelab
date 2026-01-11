@@ -132,7 +132,7 @@ jellyseerr:
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
   route: 
-    enabled: true
+    enabled: false
     type: httproute  # Switch between "httproute" and "ingress"
     hostnames:
       - jellyseerr.home.rushidarunte.com
@@ -415,7 +415,7 @@ qbittorrent:
     - configMapRef:
         name: qbittorrent-config
   route: 
-    enabled: true
+    enabled: false
     type: httproute  # Switch between "httproute" and "ingress"
     hostnames:
       - qbit.home.rushidarunte.com
