@@ -10,8 +10,6 @@ global:
         protocol: HTTP
         hostname:
           - "myflix.home.rushidarunte.com"
-          - "qbit.home.rushidarunte.com"
-          - "jellyseerr.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
@@ -20,48 +18,6 @@ global:
         protocol: HTTPS
         hostname: 
           - "myflix.home.rushidarunte.com"
-          - "qbit.home.rushidarunte.com"
-          - "jellyseerr.home.rushidarunte.com"
-        allowedRoutes:
-          namespaces:
-            from: All
-        tls:
-          mode: Terminate
-          certificateRefs:
-            - name: myflix-home-tls
-      - name: http
-        port: 80
-        protocol: HTTP
-        hostname:
-          - "qbit.home.rushidarunte.com"
-        allowedRoutes:
-          namespaces:
-            from: All
-      - name: https
-        port: 443
-        protocol: HTTPS
-        hostname: 
-          - "qbit.home.rushidarunte.com"
-        allowedRoutes:
-          namespaces:
-            from: All
-        tls:
-          mode: Terminate
-          certificateRefs:
-            - name: myflix-home-tls
-      - name: http
-        port: 80
-        protocol: HTTP
-        hostname:
-          - "jellyseerr.home.rushidarunte.com"
-        allowedRoutes:
-          namespaces:
-            from: All
-      - name: https
-        port: 443
-        protocol: HTTPS
-        hostname: 
-          - "jellyseerr.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
