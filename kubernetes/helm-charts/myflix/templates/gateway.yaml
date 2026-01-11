@@ -15,9 +15,8 @@ spec:
   - name: {{ .name }}
     port: {{ .port }}
     protocol: {{ .protocol }}
-    {{- with .hostname }}
-    hostname:
-    {{ toYaml . | nindent 6 }}
+    {{- if .hostname }}
+    hostname: {{ .hostname | quote }}
     {{- end }}
     {{- if .allowedRoutes }}
     allowedRoutes:
