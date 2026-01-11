@@ -1,9 +1,40 @@
-# charts/jellyfin/templates/httproute.yaml
 {{- if and .Values.route.enabled (eq .Values.route.type "httproute") }}
+
+{{- $fullname := include "app.fullname" . }}
+
+{{- /* --- HTTP → HTTPS redirect route --- */}}
+{{- if .Values.route.httpsRedirect }}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: {{ include "app.fullname" . }}-route
+  name: {{ $fullname }}-http-redirect
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  parentRefs:
+    - name: {{ .Release.Name }}-gateway
+      namespace: {{ .Release.Namespace }}
+      port: 80
+  hostnames:
+{{ toYaml .Values.route.hostnames | nindent 4 }}
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+{{- end }}
+---
+{{- /* --- Normal backend route (HTTPS or HTTP) --- */}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullname }}-route
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "app.labels" . | nindent 4 }}
@@ -12,68 +43,72 @@ metadata:
     {{- end }}
   {{- with .Values.route.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
-spec:
-  {{- if .Values.route.parentRefs }}
-  parentRefs:
-  {{- range .Values.route.parentRefs }}
-  - name: {{ .name }}
-    {{- if .namespace }}
-    namespace: {{ .namespace | default .Release.Namespace}}
-    {{- end }}
-    {{- if .sectionName }}
-    sectionName: {{ .sectionName }}
-    {{- end }}
-    {{- if .port }}
-    port: {{ .port }}
-    {{- end }}
-  {{- end }}
-  {{- else }}
-  parentRefs:
-    - name: {{ .Release.Name }}-gateway
-      namespace: {{ .Release.Namespace }}
-  {{- end }}
-
-  {{- with .Values.route.hostnames }}
-  hostnames:
 {{ toYaml . | nindent 4 }}
   {{- end }}
+spec:
+  parentRefs:
+{{- if .Values.route.parentRefs }}
+{{- range .Values.route.parentRefs }}
+    - name: {{ .name }}
+      {{- if .namespace }}
+      namespace: {{ .namespace | default $.Release.Namespace }}
+      {{- end }}
+      {{- if .sectionName }}
+      sectionName: {{ .sectionName }}
+      {{- end }}
+      {{- if .port }}
+      port: {{ .port }}
+      {{- else if $.Values.route.httpsRedirect }}
+      port: 443
+      {{- end }}
+{{- end }}
+{{- else if .Values.route.httpsRedirect }}
+    - name: {{ .Release.Name }}-gateway
+      namespace: {{ .Release.Namespace }}
+      port: 443
+{{- else }}
+    - name: {{ .Release.Name }}-gateway
+      namespace: {{ .Release.Namespace }}
+{{- end }}
+
+  hostnames:
+{{ toYaml .Values.route.hostnames | nindent 4 }}
 
   rules:
-  {{- range .Values.route.rules }}
-  - matches:
-    {{- if .matches }}
-{{ toYaml .matches | nindent 4 }}
-    {{- else }}
-    - path:
-        type: PathPrefix
-        value: /
-    {{- end }}
+{{- range .Values.route.rules }}
+    - matches:
+{{- if .matches }}
+{{ toYaml .matches | nindent 6 }}
+{{- else }}
+      - path:
+          type: PathPrefix
+          value: /
+{{- end }}
 
-    {{- with .filters }}
-    filters:
+{{- with .filters }}
+      filters:
 {{ toYaml . | nindent 6 }}
-    {{- end }}
+{{- end }}
 
-    {{- $hasRedirect := false }}
-    {{- range .filters }}
-    {{- if eq .type "RequestRedirect" }}
-    {{- $hasRedirect = true }}
-    {{- end }}
-    {{- end }}
+{{- $hasRedirect := false }}
+{{- range .filters }}
+{{- if eq .type "RequestRedirect" }}
+{{- $hasRedirect = true }}
+{{- end }}
+{{- end }}
 
-    {{- if not $hasRedirect }}
-    backendRefs:
-    {{- if .backendRefs }}
+{{- if not $hasRedirect }}
+      backendRefs:
+{{- if .backendRefs }}
 {{ toYaml .backendRefs | nindent 6 }}
-    {{- else }}
-      - name: {{ include "app.fullname" $ }}
-        port: {{ $.Values.containerPort }}
-        {{- if .weight }}
-        weight: {{ .weight }}
-        {{- end }}
-    {{- end }}
-    {{- end }}
-  {{- end }}
+{{- else }}
+        - name: {{ $fullname }}
+          port: {{ $.Values.containerPort }}
+          {{- if .weight }}
+          weight: {{ .weight }}
+          {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
 {{- end }}
