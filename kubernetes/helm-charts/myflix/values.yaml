@@ -171,6 +171,7 @@ jellyseerr:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - jellyseerr.home.rushidarunte.com
     rules:
@@ -223,6 +224,7 @@ radarr:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
@@ -287,6 +289,7 @@ sonarr:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
@@ -351,6 +354,7 @@ prowlarr:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
@@ -399,6 +403,7 @@ jackett:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
@@ -454,6 +459,7 @@ qbittorrent:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - qbit.home.rushidarunte.com
     rules:
@@ -516,6 +522,7 @@ navidrome:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
@@ -551,6 +558,7 @@ lidarr:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
@@ -617,6 +625,7 @@ slskd:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
@@ -655,6 +664,7 @@ soularr:
   route: 
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
+    httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
