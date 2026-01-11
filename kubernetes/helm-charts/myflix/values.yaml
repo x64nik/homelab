@@ -8,14 +8,20 @@ global:
       - name: http
         port: 80
         protocol: HTTP
-        hostname: "myflix.home.rushidarunte.com"
+        hostname:
+          - "myflix.home.rushidarunte.com"
+          - "qbit.home.rushidarunte.com"
+          - "jellyseerr.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
       - name: https
         port: 443
         protocol: HTTPS
-        hostname: "myflix.home.rushidarunte.com"
+        hostname: 
+          - "myflix.home.rushidarunte.com"
+          - "qbit.home.rushidarunte.com"
+          - "jellyseerr.home.rushidarunte.com"
         allowedRoutes:
           namespaces:
             from: All
@@ -132,7 +138,7 @@ jellyseerr:
   deploymentAnnotations:
     reloader.stakater.com/auto: "true"
   route: 
-    enabled: false
+    enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
     hostnames:
       - jellyseerr.home.rushidarunte.com
@@ -418,18 +424,18 @@ qbittorrent:
     enabled: true
     type: httproute  # Switch between "httproute" and "ingress"
     hostnames:
-      - myflix.home.rushidarunte.com
+      - qbit.home.rushidarunte.com
     rules:
       - matches:
           - path:
               type: PathPrefix
-              value: /qbit
-        filters:
-          - type: URLRewrite
-            urlRewrite:
-              path:
-                type: ReplacePrefixMatch
-                replacePrefixMatch: /
+              value: /
+        # filters:
+        #   - type: URLRewrite
+        #     urlRewrite:
+        #       path:
+        #         type: ReplacePrefixMatch
+        #         replacePrefixMatch: /
   ingress:
     enabled: false
     className: traefik
