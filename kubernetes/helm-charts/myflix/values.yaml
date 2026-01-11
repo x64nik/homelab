@@ -111,7 +111,7 @@ jellyfin:
     parentRefs:
       - name: myflix-gateway
         # namespace: default   # or {{ .Release.Namespace }}
-        port: 80            # ⚠ Important! Only HTTP listener
+        port: 443            # ⚠ Important! Only HTTP listener
     hostnames:
       - myflix.home.rushidarunte.com
     rules:
