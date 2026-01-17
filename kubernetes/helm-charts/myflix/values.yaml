@@ -1,6 +1,6 @@
 global:
   gateway:
-    enabled: true
+    enabled: false
     gatewayClassName: cilium
     annotations:
       cert-manager.io/issuer: myflix-issuer
@@ -60,7 +60,7 @@ global:
           certificateRefs:
             - name: jellyseerr-home-tls
   certManager:
-    enabled: true
+    enabled: false
     # Issuer name (namespace-scoped)
     issuerName: myflix-issuer
     
@@ -107,15 +107,15 @@ jellyfin:
         secretName: myflix-home-tls
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /
   storage:
     existingClass: "ceph-block"
     configPersistentVolumeClaim:
@@ -170,15 +170,15 @@ jellyseerr:
     reloader.stakater.com/auto: "true"
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - jellyseerr.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /
   ingress:
     enabled: false
     className: traefik
@@ -223,15 +223,15 @@ radarr:
         name: radarr-config
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /radarr
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /radarr
   ingress:
     enabled: false
     className: traefik
@@ -288,15 +288,15 @@ sonarr:
         name: sonarr-config
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /sonarr
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /sonarr
   ingress:
     enabled: false
     className: traefik
@@ -353,15 +353,15 @@ prowlarr:
         name: prowlarr-config
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /prowlarr
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /prowlarr
   ingress:
     enabled: false
     className: traefik
@@ -402,15 +402,15 @@ jackett:
     reloader.stakater.com/auto: "true"
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /jackett
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /jackett
   ingress:
     enabled: false
     className: traefik
@@ -458,15 +458,15 @@ qbittorrent:
         name: qbittorrent-config
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - qbit.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /
   ingress:
     enabled: false
     className: traefik
@@ -521,15 +521,15 @@ navidrome:
     existingClass: "ceph-block"
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /navidrome
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /navidrome
   ingress:
     enabled: false
     className: traefik
@@ -557,15 +557,15 @@ lidarr:
         name: lidarr-config
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /lidarr
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /lidarr
   ingress:
     enabled: false
     className: traefik
@@ -624,15 +624,15 @@ slskd:
     existingClass: "ceph-block"
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /slskd
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /slskd
   ingress:
     enabled: false
     className: traefik
@@ -663,15 +663,15 @@ soularr:
     existingClass: "ceph-block"
   route: 
     enabled: true
-    type: httproute  # Switch between "httproute" and "ingress"
     httpsRedirect: true
     hostnames:
       - myflix.home.rushidarunte.com
-    rules:
-      - matches:
-          - path:
-              type: PathPrefix
-              value: /soularr
+    parentRefs:
+      - name: primary-gateway-shared
+    matches:
+      - path:
+          type: PathPrefix
+          value: /soularr
   ingress:
     enabled: false
     className: traefik

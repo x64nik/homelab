@@ -1,0 +1,38 @@
+nameOverride: "open-webui"
+namespaceOverride: "open-webui"
+
+ollama:
+  enabled: false
+
+pipelines:
+  enabled: false
+
+tika:
+  enabled: false
+
+replicaCount: 1
+
+resources: {}
+
+persistence:
+  enabled: true
+  size: 2Gi
+  accessModes:
+    - ReadWriteMany
+  storageClass: "ceph-filesystem"
+  provider: local
+
+enableOpenaiApi: false
+
+
+route:
+  enabled: true
+  hostnames:
+    - "open-webui.home.rushidarunte.com"
+  parentRefs:
+    - name: open-webui-gw
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
+  httpsRedirect: true

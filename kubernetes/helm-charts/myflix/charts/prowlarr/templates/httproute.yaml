@@ -1,114 +1,83 @@
-{{- if and .Values.route.enabled (eq .Values.route.type "httproute") }}
+{{- if .Values.route.enabled }}
+{{- if .Values.route.httpsRedirect }}
 
 {{- $fullname := include "app.fullname" . }}
 
-{{- /* --- HTTP → HTTPS redirect route --- */}}
-{{- if .Values.route.httpsRedirect }}
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+# HTTP route for redirect
+
+apiVersion: {{ .Values.route.apiVersion | default "gateway.networking.k8s.io/v1" }}
+kind: {{ .Values.route.kind | default "HTTPRoute" }}
 metadata:
   name: {{ $fullname }}-http-redirect
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "app.labels" . | nindent 4 }}
+    {{- with .Values.route.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
+  {{- with .Values.route.parentRefs }}
   parentRefs:
-    - name: {{ .Release.Name }}-gateway
-      namespace: {{ .Release.Namespace }}
-      port: 80
+  {{- range . }}
+  - {{ toYaml . | nindent 4 | trim }}
+    {{- if not .sectionName }}
+    sectionName: http
+    {{- end }}
+  {{- end }}
+{{- end }}
   hostnames:
-{{ toYaml .Values.route.hostnames | nindent 4 }}
+    {{- toYaml .Values.route.hostnames | nindent 4 }}
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      filters:
+    - filters:
         - type: RequestRedirect
           requestRedirect:
             scheme: https
             statusCode: 301
-{{- end }}
 ---
-{{- /* --- Normal backend route (HTTPS or HTTP) --- */}}
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+{{- end }}
+# Main route (HTTP or HTTPS depending on httpsRedirect setting)
+{{- $fullname := include "app.fullname" . }}
+
+apiVersion: {{ .Values.route.apiVersion | default "gateway.networking.k8s.io/v1" }}
+kind: {{ .Values.route.kind | default "HTTPRoute" }}
 metadata:
-  name: {{ $fullname }}-https-route
+  name: {{ $fullname }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "app.labels" . | nindent 4 }}
-    {{- range $key, $value := .Values.route.labels }}
-    {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+    {{- with .Values.route.extraLabels }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
   {{- with .Values.route.annotations }}
   annotations:
-{{ toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   parentRefs:
-{{- if .Values.route.parentRefs }}
-{{- range .Values.route.parentRefs }}
-    - name: {{ .name }}
-      {{- if .namespace }}
-      namespace: {{ .namespace | default $.Release.Namespace }}
-      {{- end }}
-      {{- if .sectionName }}
-      sectionName: {{ .sectionName }}
-      {{- end }}
-      {{- if .port }}
-      port: {{ .port }}
-      {{- else if $.Values.route.httpsRedirect }}
-      port: 443
-      {{- end }}
-{{- end }}
-{{- else if .Values.route.httpsRedirect }}
-    - name: {{ .Release.Name }}-gateway
-      namespace: {{ .Release.Namespace }}
-      port: 443
-{{- else }}
-    - name: {{ .Release.Name }}-gateway
-      namespace: {{ .Release.Namespace }}
-{{- end }}
-
+  {{- range .Values.route.parentRefs }}
+  - {{ toYaml (omit . "sectionName") | nindent 4 | trim }}
+    {{- if $.Values.route.httpsRedirect }}
+    sectionName: https
+    {{- else if not .sectionName }}
+    sectionName: http
+    {{- else }}
+    sectionName: {{ .sectionName }}
+    {{- end }}
+  {{- end }}
   hostnames:
-{{ toYaml .Values.route.hostnames | nindent 4 }}
-
+    {{- toYaml .Values.route.hostnames | nindent 4 }}
   rules:
-{{- range .Values.route.rules }}
-    - matches:
-{{- if .matches }}
-{{ toYaml .matches | nindent 6 }}
-{{- else }}
-      - path:
-          type: PathPrefix
-          value: /
-{{- end }}
-
-{{- with .filters }}
-      filters:
-{{ toYaml . | nindent 6 }}
-{{- end }}
-
-{{- $hasRedirect := false }}
-{{- range .filters }}
-{{- if eq .type "RequestRedirect" }}
-{{- $hasRedirect = true }}
-{{- end }}
-{{- end }}
-
-{{- if not $hasRedirect }}
-      backendRefs:
-{{- if .backendRefs }}
-{{ toYaml .backendRefs | nindent 6 }}
-{{- else }}
+    {{- if .Values.route.additionalRules }}
+    {{- tpl (toYaml .Values.route.additionalRules) $ | nindent 4 }}
+    {{- end }}
+    - backendRefs:
         - name: {{ $fullname }}
-          port: {{ $.Values.containerPort }}
-          {{- if .weight }}
-          weight: {{ .weight }}
+          port: {{ .Values.containerPort }}
+          {{- if .Values.service.namespace }}
+          namespace: {{ .Values.service.namespace }}
           {{- end }}
-{{- end }}
-{{- end }}
-{{- end }}
-
 {{- end }}

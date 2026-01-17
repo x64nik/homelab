@@ -198,19 +198,39 @@ containerPort: 8096
 ingress:
   enabled: false
 
-route: 
+route:
+  # -- Enables or disables the route
   enabled: false
-  # type: httproute  # Switch between "httproute" and "ingress"
-  # hostnames:
-  #   - jellyfin.example.com
-  # parentRefs:
-  #   - name: media-gateway
-  #     namespace: media
-  # rules:
-  #   - matches:
-  #       - path:
-  #           type: PathPrefix
-  #           value: /
+
+  # -- Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1alpha2
+  apiVersion: gateway.networking.k8s.io/v1
+
+  # -- Set the route kind
+  # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+  kind: HTTPRoute
+
+  # -- Annotations to add to the route
+  annotations: {}
+  # -- Labels to add to the route
+  labels: {}
+
+  # -- Hostnames to match for the route
+  hostnames: []
+  # - "open-webui.example.com"
+
+  # -- References to the parent resources (e.g. Gateway)
+  parentRefs: []
+  # - name: open-webui-gw
+
+  # -- Enables HTTPS redirect for the route
+  httpsRedirect: false
+
+  matches:
+    - path:
+        # -- Path match type
+        type: PathPrefix
+        # -- Path match value
+        value: /
 
 autoscaling:
   enabled: false

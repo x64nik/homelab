@@ -1,38 +1,27 @@
 apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata:
-  name: primary-gateway-class
-  # No namespace - GatewayClass is cluster-scoped
-spec:
-  controllerName: io.cilium/gateway-controller
----
-apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: jellyfin-gateway
-  namespace: myflix
+  name: primary-gateway-shared
+  annotations:
+    cert-manager.io/issuer: wildcard-home-ci
 spec:
-  gatewayClassName: primary-gateway-class
+  gatewayClassName: cilium
   listeners:
   - name: http
     protocol: HTTP
+    hostname: "*.home.rushidarunte.com"
     port: 80
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata:
-  name: jellyfin
-  namespace: myflix
-spec:
-  parentRefs:
-  - name: jellyfin-gateway
-  hostnames:
-  - "myflix2.home.rushidarunte.com"
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: "/"
-    backendRefs:
-    - name: jellyfin
-      port: 8096
+    allowedRoutes:
+      namespaces:
+        from: All
+  - name: https
+    protocol: HTTPS
+    hostname: "*.home.rushidarunte.com"
+    port: 443
+    allowedRoutes:
+      namespaces:
+        from: All
+    tls:
+      mode: Terminate
+      certificateRefs:
+        - name: wildcard-home-tls
