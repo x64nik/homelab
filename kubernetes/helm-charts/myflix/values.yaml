@@ -112,6 +112,7 @@ jellyfin:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -175,6 +176,7 @@ jellyseerr:
       - jellyseerr.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -228,6 +230,7 @@ radarr:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -293,6 +296,7 @@ sonarr:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -358,6 +362,7 @@ prowlarr:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -407,6 +412,7 @@ jackett:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -463,6 +469,7 @@ qbittorrent:
       - qbit.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -526,6 +533,7 @@ navidrome:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -562,6 +570,7 @@ lidarr:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -629,6 +638,7 @@ slskd:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
@@ -668,6 +678,7 @@ soularr:
       - myflix.home.rushidarunte.com
     parentRefs:
       - name: primary-gateway-shared
+        namespace: default
     matches:
       - path:
           type: PathPrefix
