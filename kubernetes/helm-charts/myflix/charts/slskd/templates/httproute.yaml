@@ -1,10 +1,7 @@
 {{- if .Values.route.enabled }}
 {{- if .Values.route.httpsRedirect }}
-
 {{- $fullname := include "app.fullname" . }}
-
 # HTTP route for redirect
-
 apiVersion: {{ .Values.route.apiVersion | default "gateway.networking.k8s.io/v1" }}
 kind: {{ .Values.route.kind | default "HTTPRoute" }}
 metadata:
@@ -28,20 +25,29 @@ spec:
     sectionName: http
     {{- end }}
   {{- end }}
-{{- end }}
+  {{- end }}
   hostnames:
     {{- toYaml .Values.route.hostnames | nindent 4 }}
   rules:
+    {{- if .Values.route.matches }}
+    - matches:
+        {{- toYaml .Values.route.matches | nindent 8 }}
+      filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+    {{- else }}
     - filters:
         - type: RequestRedirect
           requestRedirect:
             scheme: https
             statusCode: 301
+    {{- end }}
 ---
 {{- end }}
 # Main route (HTTP or HTTPS depending on httpsRedirect setting)
 {{- $fullname := include "app.fullname" . }}
-
 apiVersion: {{ .Values.route.apiVersion | default "gateway.networking.k8s.io/v1" }}
 kind: {{ .Values.route.kind | default "HTTPRoute" }}
 metadata:
@@ -74,10 +80,21 @@ spec:
     {{- if .Values.route.additionalRules }}
     {{- tpl (toYaml .Values.route.additionalRules) $ | nindent 4 }}
     {{- end }}
+    {{- if .Values.route.matches }}
+    - matches:
+        {{- toYaml .Values.route.matches | nindent 8 }}
+      backendRefs:
+        - name: {{ $fullname }}
+          port: {{ .Values.containerPort }}
+          {{- if .Values.service.namespace }}
+          namespace: {{ .Values.service.namespace }}
+          {{- end }}
+    {{- else }}
     - backendRefs:
         - name: {{ $fullname }}
           port: {{ .Values.containerPort }}
           {{- if .Values.service.namespace }}
           namespace: {{ .Values.service.namespace }}
           {{- end }}
+    {{- end }}
 {{- end }}
