@@ -98,6 +98,7 @@ grafana:
         - grafana.home.rushidarunte.com
       parentRefs:
         - name: primary-gateway-shared
+          namespace: default
       matches:
         - path:
             type: PathPrefix
