@@ -9,6 +9,7 @@ metadata:
 spec:
   parentRefs:
   - name: primary-gateway-shared
+    namespace: default
     sectionName: http
   hostnames:
     - argocd.home.rushidarunte.com
@@ -30,6 +31,7 @@ metadata:
 spec:
   parentRefs:
   - name: primary-gateway-shared
+    namespace: default
     sectionName: https
   hostnames:
     - argocd.home.rushidarunte.com
@@ -38,5 +40,5 @@ spec:
         - name: argocd-server
           group: ''
           port: 80
-          kind: service
+          kind: Service
           weight: 1
