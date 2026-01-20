@@ -5,13 +5,17 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    repoURL: https://github.com/x64nik/homelab.git
-    targetRevision: main
-    path: kubernetes/helm-charts/open-webui
-    helm:
-      valueFiles:
-        - values-inferno.yaml
+  sources:
+    - repoURL: https://github.com/x64nik/open-webui-helm-chart.git
+      targetRevision: x64nik/feature/gateway-api-support
+      path: charts/open-webui
+      helm:
+        valueFiles:
+          - $values/kubernetes/helm-charts/open-webui/values-inferno.yaml
+    - repoURL: https://github.com/x64nik/homelab.git
+      targetRevision: main
+      ref: values
+
   destination:
     server: https://kubernetes.default.svc
     namespace: open-webui
