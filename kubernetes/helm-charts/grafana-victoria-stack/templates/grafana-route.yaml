@@ -15,5 +15,5 @@ spec:
         - name: grafana
           group: ''
           port: 80
-          kind: service
+          kind: Service
           weight: 1
