@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grafana-victoria-swtack
+  name: grafana-victoria-stack
   namespace: argocd
 spec:
   project: infrastructure
   source:
     repoURL: https://github.com/x64nik/homelab.git
     targetRevision: main
-    path: kubernetes/helm-charts/grafana-victoria-swtack
+    path: kubernetes/helm-charts/grafana-victoria-stack
     helm:
       valueFiles:
         - values.yaml
