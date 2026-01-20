@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-victoria-swtack
+  namespace: argocd
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/x64nik/homelab.git
+    targetRevision: main
+    path: kubernetes/helm-charts/grafana-victoria-swtack
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

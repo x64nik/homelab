@@ -90,6 +90,20 @@ grafana:
   enabled: true
   fullnameOverride: "grafana"
   nameOverride: "grafana"
+
+  route:
+    main:
+      enabled: true
+      hostnames:
+        - grafana.home.rushidarunte.com
+      parentRefs:
+        - primary-gateway-shared
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
+      httpsRedirect: true
+
   datasources:
     datasources.yaml:
       apiVersion: 1
