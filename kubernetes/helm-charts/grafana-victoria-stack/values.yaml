@@ -99,6 +99,7 @@ grafana:
       parentRefs:
         - name: primary-gateway-shared
           namespace: default
+          sectionName: http
       matches:
         - path:
             type: PathPrefix

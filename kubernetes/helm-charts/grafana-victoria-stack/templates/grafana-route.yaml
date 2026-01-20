@@ -6,8 +6,8 @@ metadata:
 spec:
   parentRefs:
   - name: primary-gateway-shared
-    sectionName: https
     namespace: default
+    sectionName: https
   hostnames:
     - grafana.home.rushidarunte.com
   rules:
