@@ -14,6 +14,20 @@ replicaCount: 1
 
 resources: {}
 
+image:
+  # -- Open WebUI image repository
+  # @section -- Image configuration
+  repository: ghcr.io/open-webui/open-webui
+  # -- Open WebUI image tag (Open WebUI image tags can be found here: https://github.com/open-webui/open-webui)
+  # @section -- Image configuration
+  tag: "latest"
+  # -- Open WebUI image pull policy
+  # @section -- Image configuration
+  pullPolicy: "Always"
+  # -- Use a slim version of the Open WebUI image
+  # @section -- Image configuration
+  useSlim: false
+
 persistence:
   enabled: true
   size: 2Gi
@@ -24,15 +38,16 @@ persistence:
 
 enableOpenaiApi: false
 
-
 route:
   enabled: true
+  httpsRedirect: true
   hostnames:
-    - "open-webui.home.rushidarunte.com"
+    - "gpt.home.rushidarunte.com"
   parentRefs:
-    - name: open-webui-gw
+    - name: primary-gateway-shared
+      namespace: default
   matches:
     - path:
         type: PathPrefix
         value: /
-  httpsRedirect: true
+ 
