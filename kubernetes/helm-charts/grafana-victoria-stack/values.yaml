@@ -103,7 +103,7 @@ grafana:
         - path:
             type: PathPrefix
             value: /
-      httpsRedirect: false
+      httpsRedirect: true
 
   datasources:
     datasources.yaml:
