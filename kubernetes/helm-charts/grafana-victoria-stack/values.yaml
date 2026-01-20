@@ -97,7 +97,7 @@ grafana:
       hostnames:
         - grafana.home.rushidarunte.com
       parentRefs:
-        - primary-gateway-shared
+        - name: primary-gateway-shared
       matches:
         - path:
             type: PathPrefix
