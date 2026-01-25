@@ -35,6 +35,23 @@ spec:
          - /data/ca.crt
          - /data/tls.crt
          - /data/tls.key
+    # Hubble server certificates
+    - kind: Secret
+      name: hubble-server-certs
+      namespace: kube-system
+      jsonPointers:
+        - /data/ca.crt
+        - /data/tls.crt
+        - /data/tls.key
+    
+    # Hubble relay client certificates
+    - kind: Secret
+      name: hubble-relay-client-certs
+      namespace: kube-system
+      jsonPointers:
+        - /data/ca.crt
+        - /data/tls.crt
+        - /data/tls.key
   syncPolicy:
     automated:
       prune: true

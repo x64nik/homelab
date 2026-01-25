@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rook-ceph-cluster
+  namespace: argocd
+spec:
+  project: infrastructure
+  sources:
+    - repoURL: https://charts.rook.io/release
+      chart: rook-ceph-cluster
+      targetRevision: 1.18.8
+      helm:
+        valueFiles:
+          - $values/kubernetes/helm-charts/rook-ceph/cluster-values.yaml
+      
+    - repoURL: https://github.com/x64nik/homelab.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    namespace: rook-ceph
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - Replace=false

@@ -1,0 +1,110 @@
+# helm install --create-namespace --namespace rook-ceph rook-ceph-cluster --set operatorNamespace=rook-ceph rook-release/rook-ceph-cluster
+
+operatorNamespace: rook-ceph
+clusterName: rook-ceph
+
+# Installs a debugging toolbox deployment
+toolbox:
+  # -- Enable Ceph debugging pod deployment. See [toolbox](../Troubleshooting/ceph-toolbox.md)
+  enabled: false
+  # -- Toolbox image, defaults to the image used by the Ceph cluster
+  image: #quay.io/ceph/ceph:v19.2.3
+  # -- Toolbox tolerations
+  tolerations: []
+  # -- Toolbox affinity
+  affinity: {}
+  # -- Toolbox labels
+  labels: {}
+  # -- Toolbox container security context
+  containerSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 2016
+    runAsGroup: 2016
+    capabilities:
+      drop: ["ALL"]
+  # -- Toolbox resources
+  resources:
+    limits:
+      memory: "1Gi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+  # -- Set the priority class for the toolbox if desired
+  priorityClassName:
+
+cephClusterSpec:
+  crashCollector:
+    disable: false
+    daysToRetain: 2
+  resources:
+    mgr:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "200m"
+        memory: "512Mi"
+    mon:
+      limits:
+        memory: "2Gi"
+      requests:
+        cpu: "300m"
+        memory: "1Gi"
+    osd:
+      limits:
+        memory: "4Gi"
+      requests:
+        cpu: "500m"
+        memory: "4Gi"
+    prepareosd:
+      # limits: It is not recommended to set limits on the OSD prepare job
+      #         since it's a one-time burst for memory that must be allowed to
+      #         complete without an OOM kill.  Note however that if a k8s
+      #         limitRange guardrail is defined external to Rook, the lack of
+      #         a limit here may result in a sync failure, in which case a
+      #         limit should be added.  1200Mi may suffice for up to 15Ti
+      #         OSDs ; for larger devices 2Gi may be required.
+      #         cf. https://github.com/rook/rook/pull/11103
+      requests:
+        cpu: "200m"
+        memory: "50Mi"
+    mgr-sidecar:
+      limits:
+        memory: "100Mi"
+      requests:
+        cpu: "100m"
+        memory: "40Mi"
+    crashcollector:
+      limits:
+        memory: "60Mi"
+      requests:
+        cpu: "100m"
+        memory: "60Mi"
+    logcollector:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "100m"
+        memory: "100Mi"
+    cleanup:
+      limits:
+        memory: "1Gi"
+      requests:
+        cpu: "200m"
+        memory: "100Mi"
+    exporter:
+      limits:
+        memory: "128Mi"
+      requests:
+        cpu: "50m"
+        memory: "50Mi"
+  
+route:
+  dashboard:
+    host:
+      name: ceph-dashboard.home.rushidarunte.com
+      path: "/"
+      pathType: PathPrefix
+    parentRefs:
+    - name: primary-gateway-shared
+      namespace: default
+      sectionName: https
