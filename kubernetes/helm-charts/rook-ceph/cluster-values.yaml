@@ -34,7 +34,7 @@ toolbox:
 
 cephClusterSpec:
   crashCollector:
-    disable: false
+    disable: true
     daysToRetain: 2
   resources:
     mgr:
