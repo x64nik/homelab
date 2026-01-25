@@ -77,7 +77,7 @@ cephClusterSpec:
       limits:
         memory: "60Mi"
       requests:
-        cpu: "100m"
+        cpu: "40m"
         memory: "60Mi"
     logcollector:
       limits:
