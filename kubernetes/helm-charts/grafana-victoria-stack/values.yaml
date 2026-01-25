@@ -85,7 +85,22 @@ victoria-metrics-single:
                 regex: '^/system\.slice/(.+)\.service$'
                 target_label: systemd_service_name
                 replacement: '${1}'
-
+          - job_name: "rook-ceph-exporter"
+            kubernetes_sd_configs:
+              - role: endpoints
+                namespaces:
+                  names:
+                    - rook-ceph
+            relabel_configs:
+              - source_labels: [__meta_kubernetes_service_name]
+                action: keep
+                regex: rook-ceph-exporter
+              - source_labels: [__meta_kubernetes_namespace]
+                target_label: namespace
+              - source_labels: [__meta_kubernetes_service_name]
+                target_label: service
+              - source_labels: [__meta_kubernetes_pod_name]
+                target_label: pod
 grafana:
   enabled: true
   fullnameOverride: "grafana"
