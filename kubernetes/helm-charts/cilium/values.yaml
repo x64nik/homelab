@@ -1,76 +1,7 @@
-# # Talos-specific configuration
-# ipam:
-#   mode: kubernetes
-
-# kubeProxyReplacement: true
-# l2announcements:
-#   enabled: true
-# externalIPs:
-#   enabled: true
-# devices: "eth+"
-
-# securityContext:
-#   capabilities:
-#     ciliumAgent:
-#       - CHOWN
-#       - KILL
-#       - NET_ADMIN
-#       - NET_RAW
-#       - IPC_LOCK
-#       - SYS_ADMIN
-#       - SYS_RESOURCE
-#       - DAC_OVERRIDE
-#       - FOWNER
-#       - SETGID
-#       - SETUID
-#     cleanCiliumState:
-#       - NET_ADMIN
-#       - SYS_ADMIN
-#       - SYS_RESOURCE
-
-# cgroup:
-#   autoMount:
-#     enabled: false
-#   hostRoot: /sys/fs/cgroup
-
-# # Replace with your Talos control plane endpoint
-# k8sServiceHost: 192.168.0.22
-# k8sServicePort: 6443
-
-# # Optional features
-# hubble:
-#   enabled: true
-#   relay:
-#     enabled: true
-#   ui:
-#     enabled: true
-
-# # Monitoring
-# prometheus:
-#   enabled: true
-#   serviceMonitor:
-#     enabled:  false  # Enable if you have Prometheus operator
-
-# # BGP (if needed)
-# bgpControlPlane:
-#   enabled: false
-
-# # Ingress controller (if needed)
-# ingressController:
-#   enabled: false
-
-# gatewayAPI:
-#   enabled: true
-#   enableAlpn: true
-#   enableAppProtocol: true
-
-# envoyConfig:
-#   enabled: true
-# ---- OLD ^
-
-# ---- NEW \/
+# Talos-specific configuration
 ipam:
   mode: kubernetes
+
 kubeProxyReplacement: true
 l2announcements:
   enabled: true
@@ -96,13 +27,42 @@ securityContext:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_RESOURCE
+
 cgroup:
   autoMount:
     enabled: false
   hostRoot: /sys/fs/cgroup
+
+# Replace with your Talos control plane endpoint
 k8sServiceHost: 192.168.0.21
 k8sServicePort: 6443
+
+# Optional features
+hubble:
+  enabled: true
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+
+# Monitoring
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled:  false  # Enable if you have Prometheus operator
+
+# BGP (if needed)
+bgpControlPlane:
+  enabled: false
+
+# Ingress controller (if needed)
+ingressController:
+  enabled: false
+
 gatewayAPI:
   enabled: true
   enableAlpn: true
   enableAppProtocol: true
+
+envoyConfig:
+  enabled: false
