@@ -101,6 +101,12 @@ victoria-metrics-single:
                 target_label: service
               - source_labels: [__meta_kubernetes_pod_name]
                 target_label: pod
+          # nvidia dcgm
+          - job_name: 'ultron-nvidia-dcgm-exporter'
+            static_configs:
+              - targets: ['192.168.0.160:9400']   # <-- host port that maps to the container
+            metrics_path: /metrics          # DCGM exporter uses /metrics (not /matric)
+            scheme: http                    # change to https if you enable TLS
 grafana:
   enabled: true
   fullnameOverride: "grafana"
