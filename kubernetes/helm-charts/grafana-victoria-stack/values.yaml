@@ -138,7 +138,16 @@ victoria-logs-collector:
     requests:
       cpu: 100m
       memory: 128Mi
-
+  tolerations:
+    - key: "node-role.kubernetes.io/master"
+      operator: "Exists"
+      effect: "NoSchedule"
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+  nodeSelector:
+    # This ensures it runs on all nodes including master
+    kubernetes.io/os: linux
     
 
 grafana:
