@@ -204,7 +204,6 @@ grafana:
           isDefault: true
           updateIntervalSeconds: 10
           editable: true
-
         - name: victorialogs
           type: victoriametrics-logs-datasource
           orgId: 1
@@ -212,7 +211,6 @@ grafana:
           access: proxy
           isDefault: false
           editable: true
-
         - name: victoriatraces
           type: jaeger
           orgId: 1
@@ -220,7 +218,6 @@ grafana:
           access: proxy
           isDefault: false
           editable: true
-
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
@@ -233,7 +230,6 @@ grafana:
           editable: true
           options:
             path: /var/lib/grafana/dashboards/default
-
   dashboards:
     default:
       victoriametrics:
@@ -244,7 +240,8 @@ grafana:
         gnetId: 14205
         revision: 1
         datasource: victoriametrics
-
-  plugins:
-    - victoriametrics-logs-datasource
+      nvidia-gpu-metrics:
+        gnetId: 14574
+        revision: 1
+        datasource: victoriametrics
 
