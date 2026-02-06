@@ -107,6 +107,27 @@ victoria-metrics-single:
               - targets: ['192.168.0.160:9835']   # <-- host port that maps to the container
             metrics_path: /metrics          # DCGM exporter uses /metrics (not /matric)
             scheme: http                    # change to https if you enable TLS
+
+victoria-logs-single:
+  enabled: true
+  nameOverride: "victoria-logs-single"
+  server:
+    fullnameOverride: "victoria-logs-single-server"
+    retentionDiskSpaceUsage: 5GB
+    persistentVolume:
+      enabled: true
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: "ceph-block"
+      size: 10Gi
+    resources:
+      limits:
+        cpu: 300m
+        memory: 512Mi
+  
+victoria-logs-collector:
+  enabled: false
+
 grafana:
   enabled: true
   fullnameOverride: "grafana"
