@@ -174,12 +174,10 @@ grafana:
   enabled: true
   fullnameOverride: "grafana"
   nameOverride: "grafana"
-
   admin:
     existingSecret: "grafana-admin-secret"
     userKey: admin-user
     passwordKey: admin-password
-
   route:
     main:
       enabled: true
@@ -194,7 +192,6 @@ grafana:
             type: PathPrefix
             value: /
       httpsRedirect: true
-
   datasources:
     datasources.yaml:
       apiVersion: 1
@@ -208,18 +205,34 @@ grafana:
           updateIntervalSeconds: 10
           editable: true
 
+        - name: victorialogs
+          type: victoriametrics-logs
+          orgId: 1
+          url: http://victoria-logs-single-server.monitoring.svc.cluster.local:9428
+          access: proxy
+          isDefault: false
+          editable: true
+
+        - name: victoriatraces
+          type: jaeger
+          orgId: 1
+          url: http://victoria-traces-single-server.monitoring.svc.cluster.local:10428
+          access: proxy
+          isDefault: false
+          editable: true
+
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
       providers:
-      - name: 'default'
-        orgId: 1
-        folder: ''
-        type: file
-        disableDeletion: true
-        editable: true
-        options:
-          path: /var/lib/grafana/dashboards/default
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: true
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/default
 
   dashboards:
     default:
@@ -231,4 +244,7 @@ grafana:
         gnetId: 14205
         revision: 1
         datasource: victoriametrics
+
+  plugins:
+    - victoriametrics-logs-datasource
 
