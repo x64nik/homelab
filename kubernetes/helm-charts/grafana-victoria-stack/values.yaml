@@ -15,6 +15,11 @@ victoria-metrics-single:
           - job_name: victoriametrics
             static_configs:
               - targets: [ "localhost:8428" ]
+          - job_name: "victoriatraces"
+            static_configs:
+              - targets: ["victoria-traces-single-server:10428"]
+            metrics_path: /metrics
+            scheme: http
           - job_name: "kubernetes-apiservers"
             kubernetes_sd_configs:
               - role: endpoints
