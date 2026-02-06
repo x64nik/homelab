@@ -244,4 +244,6 @@ grafana:
         gnetId: 14574
         revision: 1
         datasource: victoriametrics
+  plugins:
+    - victoriametrics-logs-datasource
 
