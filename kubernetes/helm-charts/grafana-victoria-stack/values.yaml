@@ -244,6 +244,9 @@ grafana:
         gnetId: 14574
         revision: 1
         datasource: victoriametrics
+      victorialogs:
+        json: |
+          {{- indent 8 (file "dashboards/kubernetes.json") | nindent 8 }}
   plugins:
     - victoriametrics-logs-datasource
 
