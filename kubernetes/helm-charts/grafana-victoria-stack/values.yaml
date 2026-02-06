@@ -245,8 +245,7 @@ grafana:
         revision: 1
         datasource: victoriametrics
       victorialogs:
-        json: |
-          {{- indent 8 (file "dashboards/k8s-logs-via-victorialogs.json") | nindent 8 }}
+        file: dashboards/k8s-logs-via-victorialogs.json
   plugins:
     - victoriametrics-logs-datasource
 
