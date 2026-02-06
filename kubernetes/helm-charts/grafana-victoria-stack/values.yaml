@@ -230,7 +230,7 @@ grafana:
           folder: ''
           type: file
           disableDeletion: true
-          editable: true…
+          editable: true
           options:
             path: /var/lib/grafana/dashboards/default
 
