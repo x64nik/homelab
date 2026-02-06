@@ -126,7 +126,20 @@ victoria-logs-single:
         memory: 512Mi
   
 victoria-logs-collector:
-  enabled: false
+  enabled: true
+  # nameOverride: ""
+  # fullnameOverride: ""
+  remoteWrite:
+    - url: http://victoria-logs-single-server:9428
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+    
 
 grafana:
   enabled: true
