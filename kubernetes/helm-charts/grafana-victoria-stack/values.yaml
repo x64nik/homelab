@@ -127,8 +127,8 @@ victoria-logs-single:
   
 victoria-logs-collector:
   enabled: true
-  # nameOverride: ""
-  # fullnameOverride: ""
+  nameOverride: "victoria-logs-collector"
+  fullnameOverride: "victoria-logs-collector"
   remoteWrite:
     - url: http://victoria-logs-single-server:9428
   resources:
