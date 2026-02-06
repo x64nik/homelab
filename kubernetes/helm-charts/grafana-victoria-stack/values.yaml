@@ -148,7 +148,22 @@ victoria-logs-collector:
   nodeSelector:
     # This ensures it runs on all nodes including master
     kubernetes.io/os: linux
-    
+
+victoria-traces-single:
+  enabled: true
+  nameOverride: "victoria-traces-single"
+  server:
+    fullnameOverride: "victoria-traces-single-server"
+    persistentVolume:
+      enabled: true
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: "ceph-block"
+      size: 10Gi
+    resources:
+      limits:
+        cpu: 200m
+        memory: 512Mi
 
 grafana:
   enabled: true

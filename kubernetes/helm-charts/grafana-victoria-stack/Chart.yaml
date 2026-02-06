@@ -21,7 +21,12 @@ dependencies:
   - name: victoria-logs-collector
     version: "0.2.9"
     repository: https://victoriametrics.github.io/helm-charts
-    condition: victoria-logs-collector.enabled
+    condition: victoria-logs-collector.enabled 
+  - name: victoria-traces-single
+    version: "0.0.6"
+    repository: https://victoriametrics.github.io/helm-charts
+    condition: victoria-traces-single.enabled
+
   - name: grafana
     version: "10.5.5"
     repository: https://grafana.github.io/helm-charts
