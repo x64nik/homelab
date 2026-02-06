@@ -206,7 +206,7 @@ grafana:
           editable: true
 
         - name: victorialogs
-          type: victoriametrics-logs
+          type: victoriametrics-logs-datasource
           orgId: 1
           url: http://victoria-logs-single-server.monitoring.svc.cluster.local:9428
           access: proxy
@@ -230,7 +230,7 @@ grafana:
           folder: ''
           type: file
           disableDeletion: true
-          editable: true
+          editable: true…
           options:
             path: /var/lib/grafana/dashboards/default
 
