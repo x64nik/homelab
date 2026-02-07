@@ -246,7 +246,6 @@ grafana:
       nvidia-gpu-metrics:
         gnetId: 14574
         revision: 11
-        datasource: victoriametrics
+        # datasource: victoriametrics
   plugins:
     - victoriametrics-logs-datasource
-
