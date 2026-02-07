@@ -246,6 +246,8 @@ grafana:
       nvidia-gpu-metrics:
         gnetId: 14574
         revision: 11
-        # datasource: victoriametrics
+        datasource:
+          - name: DS_PROMETHEUS
+            value: datasource
   plugins:
     - victoriametrics-logs-datasource
