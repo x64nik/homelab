@@ -217,10 +217,15 @@ grafana:
         - name: victoriatraces
           type: jaeger
           orgId: 1
-          url: http://victoria-traces-single-server.monitoring.svc.cluster.local:10428
+          url: http://victoria-traces-single-server.monitoring.svc.cluster.local:10428/select/jaeger
           access: proxy
           isDefault: false
           editable: true
+          jsonData:
+            tracesToLogsV2:
+              datasourceUid: 'victorialogs'
+            tracesToMetrics:
+              datasourceUid: 'victoriametrics'
   dashboardProviders:
     dashboardproviders.yaml:
       apiVersion: 1
