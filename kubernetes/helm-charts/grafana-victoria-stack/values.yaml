@@ -234,7 +234,7 @@ grafana:
     default:
       victoriametrics:
         gnetId: 10229
-        revision: 22
+        revision: 48
         datasource: victoriametrics
       kubernetes:
         gnetId: 14205
@@ -242,7 +242,7 @@ grafana:
         datasource: victoriametrics
       nvidia-gpu-metrics:
         gnetId: 14574
-        revision: 1
+        revision: 11
         datasource: victoriametrics
   plugins:
     - victoriametrics-logs-datasource
