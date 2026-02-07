@@ -248,6 +248,6 @@ grafana:
         revision: 11
         datasource:
           - name: DS_PROMETHEUS
-            value: datasource
+            value: victoriametrics
   plugins:
     - victoriametrics-logs-datasource
