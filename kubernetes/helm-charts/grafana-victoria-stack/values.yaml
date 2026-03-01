@@ -112,6 +112,24 @@ victoria-metrics-single:
               - targets: ['192.168.0.160:9835']   # <-- host port that maps to the container
             metrics_path: /metrics          # DCGM exporter uses /metrics (not /matric)
             scheme: http                    # change to https if you enable TLS
+          # qdrant metrics - internal cluster URL for victoria metrics scrape
+          # endpoint: http://qdrant.qdrant.svc.cluster.local:6333/metrics
+          - job_name: 'qdrant'
+            kubernetes_sd_configs:
+              - role: endpoints
+                namespaces:
+                  names:
+                    - qdrant
+            relabel_configs:
+              - source_labels: [__meta_kubernetes_service_name]
+                action: keep
+                regex: qdrant
+              - source_labels: [__meta_kubernetes_namespace]
+                target_label: namespace
+              - source_labels: [__meta_kubernetes_service_name]
+                target_label: service
+              - source_labels: [__meta_kubernetes_pod_name]
+                target_label: pod
     resources:
       limits:
         cpu: 300m
