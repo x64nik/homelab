@@ -1,0 +1,208 @@
+replicaCount: 1
+
+image:
+  repository: docker.io/qdrant/qdrant
+  pullPolicy: IfNotPresent
+  tag: ""
+  useUnprivilegedImage: false
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+args: ["./config/initialize.sh"]
+env: []
+
+service:
+  type: ClusterIP
+  additionalLabels: {}
+  annotations: {}
+  loadBalancerIP: ""
+  ports:
+    - name: http
+      port: 6333
+      targetPort: 6333
+      protocol: TCP
+      checksEnabled: true
+    - name: grpc
+      port: 6334
+      targetPort: 6334
+      protocol: TCP
+      checksEnabled: false
+    - name: p2p
+      port: 6335
+      targetPort: 6335
+      protocol: TCP
+      checksEnabled: false
+
+ingress:
+  enabled: false
+  ingressClassName: ""
+  additionalLabels: {}
+  annotations: {}
+  hosts:
+    - host: example-domain.com
+      paths:
+        - path: /
+          pathType: Prefix
+          servicePort: 6333
+  tls: []
+
+livenessProbe:
+  enabled: false
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 1
+  failureThreshold: 6
+  successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 1
+  failureThreshold: 6
+  successThreshold: 1
+
+startupProbe:
+  enabled: false
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 1
+  failureThreshold: 30
+  successThreshold: 1
+
+additionalLabels: {}
+additionalAnnotations: {}
+podAnnotations: {}
+podLabels: {}
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 2Gi
+
+containerSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 2000
+  allowPrivilegeEscalation: false
+  privileged: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+podSecurityContext:
+  fsGroup: 3000
+  fsGroupChangePolicy: Always
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 2000
+
+lifecycle:
+  preStop:
+    exec:
+      command: ["sleep", "5"]
+
+updateVolumeFsOwnership: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: qdrant
+          topologyKey: kubernetes.io/hostname
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: qdrant
+
+persistence:
+  accessModes: ["ReadWriteOnce"]
+  size: 10Gi
+  annotations: {}
+  additionalLabels: {}
+  storageClassName: ceph-block
+
+snapshotPersistence:
+  enabled: false
+  accessModes: ["ReadWriteOnce"]
+  size: 10Gi
+  annotations: {}
+  additionalLabels: {}
+
+snapshotRestoration:
+  enabled: false
+  pvcName: snapshots-pvc
+  mountPath: /qdrant/snapshot-restoration
+  snapshots: []
+
+config:
+  cluster:
+    enabled: true
+    p2p:
+      port: 6335
+      enable_tls: false
+    consensus:
+      tick_period_ms: 100
+  service:
+    enable_tls: false
+
+sidecarContainers: []
+
+metrics:
+  serviceMonitor:
+    enabled: true
+    additionalLabels: {}
+    scrapeInterval: 30s
+    scrapeTimeout: 10s
+    targetPort: http
+    targetPath: "/metrics"
+    metricRelabelings: []
+    relabelings: []
+
+serviceAccount:
+  annotations: {}
+  create: true
+  name: ""
+
+priorityClassName: ""
+
+shareProcessNamespace: false
+
+podManagementPolicy: Parallel
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+apiKey: false
+readOnlyApiKey: false
+
+additionalVolumes: []
+additionalVolumeMounts: []
+
+chartTests:
+  dbInteraction:
+    image: registry.suse.com/bci/bci-base:latest
+    resources:
+      requests:
+        cpu: 100m
+        memory: 200Mi
+      limits:
+        cpu: 100m
+        memory: 200Mi
