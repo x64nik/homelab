@@ -107,7 +107,7 @@ lifecycle:
     exec:
       command: ["sleep", "5"]
 
-updateVolumeFsOwnership: true
+updateVolumeFsOwnership: false
 
 nodeSelector: {}
 
