@@ -4,7 +4,7 @@ image:
   repository: docker.io/qdrant/qdrant
   pullPolicy: IfNotPresent
   tag: ""
-  useUnprivilegedImage: false
+  useUnprivilegedImage: true
 
 imagePullSecrets: []
 nameOverride: ""
@@ -107,7 +107,7 @@ lifecycle:
     exec:
       command: ["sleep", "5"]
 
-updateVolumeFsOwnership: true
+updateVolumeFsOwnership: false
 
 nodeSelector: {}
 
@@ -166,14 +166,7 @@ sidecarContainers: []
 
 metrics:
   serviceMonitor:
-    enabled: true
-    additionalLabels: {}
-    scrapeInterval: 30s
-    scrapeTimeout: 10s
-    targetPort: http
-    targetPath: "/metrics"
-    metricRelabelings: []
-    relabelings: []
+    enabled: false
 
 serviceAccount:
   annotations: {}
