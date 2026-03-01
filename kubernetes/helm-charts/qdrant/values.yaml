@@ -166,14 +166,7 @@ sidecarContainers: []
 
 metrics:
   serviceMonitor:
-    enabled: true
-    additionalLabels: {}
-    scrapeInterval: 30s
-    scrapeTimeout: 10s
-    targetPort: http
-    targetPath: "/metrics"
-    metricRelabelings: []
-    relabelings: []
+    enabled: false
 
 serviceAccount:
   annotations: {}
