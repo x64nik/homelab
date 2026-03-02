@@ -1,35 +1,27 @@
 # Homelab Infrastructure - Agent Guidelines
 
 ## Overview
-This repository contains infrastructure-as-code for a personal homelab setup, using Terraform, Kubernetes (Talos), Helm charts, and Docker Compose. No traditional build/lint/test commands exist.
+This repository uses GitOps with ArgoCD for infrastructure management. Terraform, Kubernetes (Talos), Helm charts, and Docker Compose are the primary tools. **No traditional build/lint/test commands** — deployment is via ArgoCD from the `main` branch.
 
-## Detailed Rule Files
-> These files contain the full, detailed rules for specific domains. **Read the relevant file before starting any task in that area.**
-
-| Task Area | Rule File |
-|---|---|
-| Any Kubernetes deployment, Helm chart, ArgoCD, GitOps | `.opencode/rules/kubernetes.md` |
 ---
 
-## ⚠️ CRITICAL — Kubernetes GitOps Rules (Read Before ANY K8s Task)
-
-> These rules are **non-negotiable** and override any generic Helm/kubectl commands listed elsewhere in this file.
+## ⚠️ CRITICAL — Kubernetes GitOps Rules
 
 ### NEVER do any of the following directly:
-- `helm install` / `helm upgrade --install` — **FORBIDDEN for deployments**
+- `helm install` / `helm upgrade --install` — FORBIDDEN for deployments
 - `kubectl apply` to deploy or fix workloads
 - `kubectl edit` / `kubectl patch` / `kubectl delete` on live objects
-- Install operators, CRDs, or any external dependency not explicitly approved
+- Install operators, CRDs, or external dependencies without explicit approval
 
-### ALWAYS follow this flow for any Kubernetes deployment or change:
-1. Create/update Helm values → `./kubernetes/helm-charts/<app-name>/values.yaml`
-2. Create/update ArgoCD Application manifest → `./kubernetes/argocd/apps/<app-name>/`
-3. Create a new project in `./kubernetes/argocd/projects/` **only if** no existing project fits — reuse `infrastructure` or `media-stack` first
-4. Commit changes to a **feature branch** using naming: `opencode/<task>/<feature>`
-5. Raise a PR → **wait for user approval** → merge to `main`
-6. Only after merge to `main` verify ArgoCD sync — ArgoCD tracks `main` branch only
+### GitOps Flow (ALWAYS follow):
+1. Update Helm values → `./kubernetes/helm-charts/<app-name>/values.yaml`
+2. Create/update ArgoCD Application → `./kubernetes/argocd/apps/<app-name>/`
+3. Reuse existing projects (`infrastructure`, `media-stack`) or create new one in `./kubernetes/argocd/projects/`
+4. Commit to feature branch: `opencode/<task>/<feature>`
+5. Raise PR → wait for approval → merge to `main`
+6. ArgoCD auto-syncs from `main` only
 
-### ArgoCD Application Template (always use this skeleton):
+### ArgoCD Application Template:
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -37,14 +29,11 @@ metadata:
   name: <app-name>
   namespace: argocd
 spec:
-  project: <existing-project>   # use 'infrastructure' or 'media-stack' unless a new one is justified
+  project: <existing-project>   # 'infrastructure' or 'media-stack'
   source:
     repoURL: <repo-url>
-    targetRevision: main         # ALWAYS main, never a feature branch
+    targetRevision: main         # ALWAYS main
     path: kubernetes/helm-charts/<app-name>
-    helm:
-      valueFiles:
-        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: <target-namespace>
@@ -57,92 +46,70 @@ spec:
 ```
 
 ### External Dependencies:
-- If a feature requires an external dependency (e.g., ServiceMonitor → Prometheus Operator, metrics → kube-state-metrics), **flag it and stop** — do not add it until the user explicitly approves.
+Flag requirements like ServiceMonitor (→Prometheus Operator), ExternalSecrets (→Vault) — **stop and wait for approval**.
 
 ---
 
-## ⚠️ CRITICAL — Kubernetes Debugging Rules
+## Debugging (Read-Only Allowed)
 
-> Use `kubectl` freely for **read-only investigation**. All fixes must still go through GitOps above.
-
-### Safe read-only commands:
+Safe commands for investigation:
 ```bash
-kubectl get pods -n <namespace> -o wide
-kubectl describe pod <pod-name> -n <namespace>
-kubectl logs <pod-name> -n <namespace> --previous
-kubectl get events -n <namespace> --sort-by='.lastTimestamp'
-kubectl get pvc,svc,ingress,certificate -n <namespace>
+kubectl get pods -n <ns> -o wide
+kubectl describe pod <pod-name> -n <ns>
+kubectl logs <pod-name> -n <ns> --previous
+kubectl get events -n <ns> --sort-by='.lastTimestamp'
 argocd app get <app-name>
 argocd app diff <app-name>
 ```
 
-### Temporary debug pods (allowed, always use --rm):
+Debug pods (use `--rm`):
 ```bash
-kubectl run -it --rm debug --image=nicolaka/netshoot --restart=Never -n <namespace> -- bash
+kubectl run -it --rm debug --image=nicolaka/netshoot --restart=Never -n <ns> -- bash
 ```
-
-### After identifying the issue:
-- Fix via template changes in `./kubernetes/helm-charts/` or `./kubernetes/talos/`
-- Follow the GitOps flow above — never patch live objects
 
 ---
 
 ## Commands
 
-### Terraform Operations
-- `terraform init` - Initialize modules and download providers
-- `terraform plan` - Preview changes before applying
-- `terraform apply -auto-approve` - Apply infrastructure changes
-- `terraform destroy` - Remove all managed resources
-- Navigate to specific directory: `cd terraform/clusters/prod && terraform ...`
+### Terraform:
+- `terraform init` - Initialize modules and providers
+- `terraform plan` - Preview changes
+- `terraform apply -auto-approve` - Apply changes
+- `terraform destroy` - Remove resources
+- Navigate: `cd terraform/clusters/prod && terraform ...`
 
-### Kubernetes/Helm — Utility Commands Only (NOT for deployments)
-> ⚠️ The commands below are for **local linting/rendering only** — never for direct deployment.
-- `helm template <name> ./<chart-path>` - Render templates locally to verify output
-- `helm lint ./<chart-path>` - Lint chart before committing
-- `helm dependency update ./<chart-path>` - Update Chart.lock after adding subcharts
-- `argocd app get <app-name>` - Check ArgoCD app status
-- `argocd app diff <app-name>` - Check diff before sync
+### Helm (linting/rendering only):
+- `helm template <name> ./<chart-path>` - Render templates locally
+- `helm lint ./<chart-path>` - Validate chart
+- `helm dependency update ./<chart-path>` - Update Chart.lock
 
-### Scripts
-- `bash scripts/bash/helm-chart-manager.sh` - Manage Helm charts with AWS ECR integration
+### Scripts:
+- `bash scripts/bash/helm-chart-manager.sh` - Helm charts with AWS ECR
 - `bash scripts/bash/cloudinit.sh` - Create VM templates
-- `bash scripts/bash/fe_entrypoint.sh` - Replace NGINX config placeholders
 
 ---
 
 ## Code Style Guidelines
 
 ### Terraform (.tf files)
-**Naming:**
-- Variables: snake_case (`proxmox_vms_talos`, `cp_vip`)
-- Resources: snake_case with descriptive names (`resource "helm_release" "chart"`)
-- Modules: lowercase with hyphens in paths (`modules/vm`, `modules/cluster`)
-
+**Naming:** snake_case (`proxmox_vms_talos`, `cp_vip`)
 **Type System:**
 ```terraform
 variable "example" {
   type = map(object({
     id     = number
     name   = string
-    cpu    = optional(number, 2)  # Optional with default
+    cpu    = optional(number, 2)
   }))
 }
 ```
-- Use strict `type` definitions with `object()` for complex structures
+- Use strict `type` with `object()` for complex structures
 - Leverage `optional()` for parameters with defaults
-
-**Formatting:**
-- 2-space indentation
-- Empty lines separate logical blocks (provider, variables, resources, outputs)
-- Comments explain sections: `# Configure provider in root module`
+- 2-space indentation; empty lines separate logical blocks
 
 ### Kubernetes Manifests (.yaml files)
-**Naming:**
-- Resource names: lowercase with hyphens (`cluster-issuer.yaml`)
-- Labels follow standard conventions (`app.kubernetes.io/name`, `app: jellyfin`)
-- Container names: lowercase and descriptive
-
+**Naming:** lowercase with hyphens (`cluster-issuer.yaml`)
+**Labels:** use `app.kubernetes.io/name`, `app: <name>` conventions
 **Patterns:**
 ```yaml
 apiVersion: apps/v1
@@ -156,23 +123,18 @@ spec:
     matchLabels:
       app: <app-name>
 ```
-- Use `nodeSelector` for node affinity
-- Define `securityContext` with non-root users
-- Include resource requests/limits
+- Include `nodeSelector`, `securityContext`, resource requests/limits
 
 ### Helm Charts
 **Structure:**
 ```
 charts/<name>/
-├── Chart.yaml          # Definition with dependencies
+├── Chart.yaml          # Dependencies
 ├── values.yaml         # Configuration
 └── templates/          # Kubernetes manifests
 ```
-
-**Template Patterns:**
 - Use `{{ include "app.fullname" . }}` for consistent naming
-- Conditional rendering: `{{- with ... }}` blocks
-- Follow Helm best practices with `include` and `tpl` functions
+- Conditional: `{{- with ... }}` blocks
 
 ### Docker Compose (.yml files)
 ```yaml
@@ -187,8 +149,6 @@ services:
       - "8080:8080"
     restart: unless-stopped
 ```
-- Service names: lowercase with hyphens
-- Environment variables: uppercase with underscores
 
 ### Bash Scripts (.sh files)
 ```bash
@@ -205,8 +165,7 @@ auth_ecr() {
 ```
 - Variables: lowercase with underscores
 - Functions: snake_case
-- Use `local` keyword for function-scoped variables
-- Error handling with `set -e` and explicit checks
+- Use `local` for function-scoped variables
 
 ---
 
@@ -216,11 +175,11 @@ homelab/
 ├── docker/           # Docker Compose configurations
 ├── kubernetes/       # Kubernetes manifests, Helm charts, ArgoCD
 │   ├── argocd/
-│   │   ├── apps/     # ArgoCD Application manifests (one folder per app)
+│   │   ├── apps/     # ArgoCD Application manifests
 │   │   └── projects/ # ArgoCD Project manifests
 │   ├── boilerplates/ # Reusable template files
 │   ├── helm-charts/  # Helm chart values and custom charts
-│   └── talos/        # Cluster-level resources (issuers, gateways, etc.)
+│   └── talos/        # Cluster-level resources
 ├── scripts/          # Automation scripts
 └── terraform/        # Infrastructure as Code
     ├── clusters/     # Talos Kubernetes cluster deployment
@@ -228,9 +187,10 @@ homelab/
     └── talos/        # Complete Talos cluster setup
 ```
 
+---
+
 ## Key Notes
-- No CI/CD workflows present; deployment is manual or via ArgoCD GitOps
+- **ArgoCD tracks `main` only** — feature branches will NOT deploy until merged
 - Use `.env` files for sensitive configuration (gitignored)
-- External secrets managed via HashiCorp Vault + external-secrets operator — never commit plaintext secrets
-- All services use consistent naming and organizational patterns
-- ArgoCD tracks the **main** branch — feature branch changes will NOT be deployed until merged
+- External secrets via HashiCorp Vault + external-secrets operator — never commit plaintext secrets
+- ArgoCD projects: `infrastructure` (platform tools), `media-stack` (self-hosted apps)
