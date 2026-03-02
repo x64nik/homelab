@@ -180,8 +180,7 @@ shareProcessNamespace: false
 podManagementPolicy: Parallel
 
 podDisruptionBudget:
-  enabled: true
-  minAvailable: 1
+  enabled: false
 
 apiKey: false
 readOnlyApiKey: false
