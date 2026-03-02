@@ -1,0 +1,61 @@
+# CloudNativePG Operator Configuration
+replicaCount: 1
+
+image:
+  repository: ghcr.io/cloudnative-pg/cloudnative-pg
+  pullPolicy: IfNotPresent
+  tag: ""
+
+serviceAccount:
+  create: true
+  name: ""
+
+rbac:
+  create: true
+  aggregateClusterRoles: false
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - "ALL"
+
+crds:
+  create: true
+
+webhook:
+  port: 9443
+  mutating:
+    create: true
+    failurePolicy: Fail
+  validating:
+    create: true
+    failurePolicy: Fail
+
+config:
+  create: true
+  name: cnpg-controller-manager-config
+  secret: false
+  clusterWide: true
+  data: {}
+
+monitoring:
+  podMonitorEnabled: false
