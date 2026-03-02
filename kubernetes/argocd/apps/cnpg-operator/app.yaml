@@ -11,7 +11,10 @@ spec:
       chart: cloudnative-pg
       helm:
         valueFiles:
-          - $values/kubernetes/helm-charts/cnpg-operator/values/default.yaml
+          - $values/kubernetes/helm-charts/cnpg-operator/values.yaml
+    - repoURL: https://github.com/x64nik/homelab.git
+      targetRevision: main
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: cnpg-system
