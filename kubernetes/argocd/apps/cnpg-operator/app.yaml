@@ -6,9 +6,9 @@ metadata:
 spec:
   project: infrastructure
   source:
-    repoURL: https://github.com/cloudnative-pg/charts.git
-    targetRevision: main
-    path: charts/cloudnative-pg
+    repoURL: https://cloudnative-pg.github.io/charts
+    targetRevision: 0.27.1
+    chart: cloudnative-pg
     helm:
       valueFiles:
         - values.yaml
