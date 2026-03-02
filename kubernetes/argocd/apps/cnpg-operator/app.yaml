@@ -5,13 +5,13 @@ metadata:
   namespace: argocd
 spec:
   project: infrastructure
-  source:
-    repoURL: https://cloudnative-pg.github.io/charts
-    targetRevision: 0.27.1
-    chart: cloudnative-pg
-    helm:
-      valueFiles:
-        - values.yaml
+  sources:
+    - repoURL: https://cloudnative-pg.github.io/charts
+      targetRevision: 0.27.1
+      chart: cloudnative-pg
+      helm:
+        valueFiles:
+          - $values/kubernetes/helm-charts/cnpg-operator/values/default.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: cnpg-system
