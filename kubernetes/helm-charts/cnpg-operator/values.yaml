@@ -1,0 +1,18 @@
+image:
+  repository: ghcr.io/cloudnative-pg/cloudnative-pg
+  tag: ""
+
+fullnameOverride: "cnpg"
+
+serviceMonitor:
+  enabled: false
+
+# Operator configuration
+env: []
+
+# Enable leader election for HA (default is already configured)
+leaderElection:
+  enabled: true
+
+# Watch all namespaces (leave empty or set specific ones)
+watchNamespaces: []
