@@ -272,5 +272,12 @@ grafana:
         datasource:
           - name: DS_PROMETHEUS
             value: victoriametrics
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+      folder: /tmp/dashboards
+      
   plugins:
     - victoriametrics-logs-datasource
